@@ -2,6 +2,8 @@ Flask
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-SocketIO
+gunicorn
+psycopg2-binary
 requests
 python-dotenv
 openai
