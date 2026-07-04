@@ -1,0 +1,159 @@
+﻿{% extends "base.html" %}
+{% set page_class = "pcbuilder-page" %}
+
+{% block content %}
+<section class="chat-card">
+  <div class="heading-group">
+    <h1>PC Builder Chat</h1>
+    <p>Ask anything about PC components, budgets, upgrades, or compatibility.</p>
+    
+    <div class="mode-toggle">
+      <label class="toggle-label">
+        <input type="checkbox" id="beginner-mode" {{ 'checked' if session.get('beginner_mode', False) else '' }}>
+        <span class="toggle-slider"></span>
+        ELI5 Beginner Mode
+      </label>
+      <span class="mode-description">Toggle to explain technical terms in plain English</span>
+    </div>
+  </div>
+
+  <div class="chat-area">
+    <div class="messages" id="messages">
+      <div class="message-row bot">
+        <div class="message-bubble bot"><strong>Byte:</strong> Hi {{ username }}! Start typing your question about PCs.</div>
+      </div>
+    </div>
+
+    <form id="chat-form" class="chat-actions">
+      <input type="text" name="message" id="user-input" placeholder="Type your question..." required autocomplete="off">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</section>
+
+<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+<script>
+  const socket = io();
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('user-input');
+  const messages = document.getElementById('messages');
+  const beginnerToggle = document.getElementById('beginner-mode');
+
+  function addMessage(type, text) {
+    const row = document.createElement('div');
+    row.className = `message-row ${type === 'You' ? 'you' : 'bot'}`;
+    const bubble = document.createElement('div');
+    bubble.className = `message-bubble ${type === 'You' ? 'you' : 'bot'}`;
+    bubble.innerHTML = `<strong>${type}:</strong> ${text}`;
+    row.appendChild(bubble);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  socket.on('response', data => {
+    addMessage('Byte', data.reply);
+  });
+
+  // Handle beginner mode toggle
+  beginnerToggle.addEventListener('change', async () => {
+    const isBeginner = beginnerToggle.checked;
+    
+    try {
+      const response = await fetch('/toggle-beginner-mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ beginner_mode: isBeginner })
+      });
+      
+      if (response.ok) {
+        addMessage('Byte', isBeginner ? 
+          'Beginner mode activated! I\'ll explain everything in simple terms now. Ask me anything!' : 
+          'Expert mode activated! I\'ll use technical terms and detailed explanations.');
+      }
+    } catch (error) {
+      console.error('Error toggling beginner mode:', error);
+    }
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const message = input.value.trim();
+    if (!message) return;
+    addMessage('You', message);
+    input.value = '';
+
+    if (socket.connected) {
+      socket.emit('message', message);
+      return;
+    }
+
+    const response = await fetch("{{ url_for('pcbuilder') }}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `message=${encodeURIComponent(message)}`
+    });
+
+    const data = await response.json();
+    addMessage('Bot', data.reply);
+  });
+</script>
+
+<style>
+.mode-toggle {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.toggle-label input {
+  display: none;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background: #ccc;
+  border-radius: 24px;
+  margin-right: 12px;
+  transition: background 0.3s;
+}
+
+.toggle-slider:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s;
+}
+
+.toggle-label input:checked + .toggle-slider {
+  background: var(--accent-primary);
+}
+
+.toggle-label input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+.mode-description {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: normal;
+}
+</style>
+{% endblock %}

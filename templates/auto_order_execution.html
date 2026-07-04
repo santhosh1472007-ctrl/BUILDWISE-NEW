@@ -1,0 +1,693 @@
+{% extends "base.html" %}
+{% set page_class = "auto-order-page" %}
+
+{% block content %}
+<section class="auto-order-card">
+  <div class="heading-group">
+    <h1>⚡ Module 06 · PRO</h1>
+    <h2>Auto Order Execution</h2>
+    <p>Automated order placement pipeline with real-time verification and execution</p>
+  </div>
+
+  {% if not execution_result %}
+  <!-- Order Configuration Form -->
+  <div class="order-config-section">
+    <h3>Configure Automated Order</h3>
+    <form method="POST" class="order-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="customer_email">Customer Email</label>
+          <input type="email" id="customer_email" name="customer_email" required
+                 placeholder="customer@example.com">
+          <div class="field-hint">Email for order confirmations and updates</div>
+        </div>
+
+        <div class="form-group">
+          <label for="build_components">Build Components</label>
+          <textarea id="build_components" name="build_components" rows="4" required
+                    placeholder="AMD Ryzen 5 7600
+NVIDIA RTX 4070
+32GB DDR5-5600
+ASUS B650 Motherboard
+750W 80+ Gold PSU
+1TB NVMe SSD
+Mid Tower Case"></textarea>
+          <div class="field-hint">List all components to be ordered</div>
+        </div>
+
+        <div class="form-group">
+          <label for="total_amount">Total Amount (₹)</label>
+          <input type="number" id="total_amount" name="total_amount" min="1000" step="0.01" required
+                 placeholder="150000.00">
+          <div class="field-hint">Total order value including taxes</div>
+        </div>
+
+        <div class="form-group">
+          <label for="payment_method">Payment Method</label>
+          <select id="payment_method" name="payment_method" required>
+            <option value="">Select payment method...</option>
+            <option value="credit_card">Credit Card</option>
+            <option value="debit_card">Debit Card</option>
+            <option value="upi">UPI</option>
+            <option value="net_banking">Net Banking</option>
+            <option value="wallet">Digital Wallet</option>
+          </select>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="shipping_address">Shipping Address</label>
+          <textarea id="shipping_address" name="shipping_address" rows="3" required
+                    placeholder="Full Name
+Street Address
+City, State - PIN Code
+Phone Number"></textarea>
+          <div class="field-hint">Complete shipping address for delivery</div>
+        </div>
+      </div>
+
+      <div class="pipeline-preview">
+        <h4>Automated Pipeline Steps</h4>
+        <div class="pipeline-steps">
+          <div class="pipeline-step">
+            <span class="step-number">1</span>
+            <span class="step-name">Verify Authentication</span>
+            <span class="step-desc">Validates user credentials and permissions</span>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">2</span>
+            <span class="step-name">Confirm Approval</span>
+            <span class="step-desc">Checks order approval and compliance</span>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">3</span>
+            <span class="step-name">Check Stock</span>
+            <span class="step-desc">Verifies component availability</span>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">4</span>
+            <span class="step-name">Process Payment</span>
+            <span class="step-desc">Secures payment through encrypted channels</span>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">5</span>
+            <span class="step-name">Place Orders</span>
+            <span class="step-desc">Executes orders across multiple retailers</span>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">6</span>
+            <span class="step-name">Send Confirmation</span>
+            <span class="step-desc">Delivers confirmations and tracking info</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="execute-button">
+          <span class="button-icon">⚡</span>
+          Execute Automated Order
+        </button>
+      </div>
+    </form>
+  </div>
+  {% else %}
+  <!-- Execution Results -->
+  <div class="execution-results">
+    <div class="execution-header">
+      <h3>Pipeline Execution Results</h3>
+      <div class="execution-status {{ 'success' if execution_result.success else 'failed' }}">
+        {% if execution_result.success %}
+          <span class="status-icon">✅</span>
+          <span class="status-text">Order Executed Successfully</span>
+        {% else %}
+          <span class="status-icon">❌</span>
+          <span class="status-text">Execution Failed: {{ execution_result.error }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="pipeline-visualization">
+      {% for step in execution_result.pipeline_steps %}
+      <div class="pipeline-step-result {{ step.status }}">
+        <div class="step-header">
+          <span class="step-number">{{ step.step }}</span>
+          <span class="step-name">{{ step.name }}</span>
+          <span class="step-status">
+            {% if step.status == 'completed' %}
+              ✅ Completed
+            {% elif step.status == 'processing' %}
+              ⏳ Processing
+            {% elif step.status == 'failed' %}
+              ❌ Failed
+            {% else %}
+              ⏳ Pending
+            {% endif %}
+          </span>
+        </div>
+        <div class="step-description">{{ step.description }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="execution-log">
+      <h4>Execution Log</h4>
+      <div class="log-entries">
+        {% for log_entry in execution_result.execution_log %}
+        <div class="log-entry">
+          <span class="log-timestamp">{{ log_entry.timestamp }}</span>
+          <span class="log-step">Step {{ log_entry.step }}</span>
+          <span class="log-message">{{ log_entry.message }}</span>
+          <div class="log-details">{{ log_entry.details }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if execution_result.success %}
+    <div class="success-summary">
+      <h4>Order Summary</h4>
+      <div class="summary-details">
+        <div class="summary-row">
+          <span>Order IDs:</span>
+          <span>{{ execution_result.order_ids|join(', ') }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Estimated Delivery:</span>
+          <span>{{ execution_result.estimated_delivery }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Customer:</span>
+          <span>{{ order_data.customer_email }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Total Amount:</span>
+          <span>₹{{ "%.2f"|format(order_data.total_amount) }}</span>
+        </div>
+      </div>
+
+      <div class="success-actions">
+        <button onclick="window.location.reload()" class="new-order-button">
+          <span class="button-icon">➕</span>
+          Process New Order
+        </button>
+        <button onclick="printOrderSummary()" class="print-button">
+          <span class="button-icon">🖨️</span>
+          Print Summary
+        </button>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</section>
+
+<style>
+.auto-order-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.auto-order-card h1 {
+  color: var(--accent-primary);
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.auto-order-card h2 {
+  color: var(--accent-secondary);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.order-config-section h3,
+.execution-results h3,
+.execution-results h4 {
+  color: var(--accent-primary);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.order-form {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.field-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.pipeline-preview {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.pipeline-preview h4 {
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.pipeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pipeline-step {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border-radius: 8px;
+  border: 1px solid var(--border-secondary);
+}
+
+.step-number {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.step-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.step-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.form-actions {
+  text-align: center;
+}
+
+.execute-button {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.execute-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.execution-results {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.execution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.execution-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.execution-status.success {
+  background: rgba(0, 180, 0, 0.2);
+  color: #00b400;
+}
+
+.execution-status.failed {
+  background: rgba(180, 0, 0, 0.2);
+  color: #b40000;
+}
+
+.pipeline-visualization {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pipeline-step-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 2px solid var(--border-secondary);
+  transition: all 0.3s ease;
+}
+
+.pipeline-step-result.completed {
+  border-color: #00b400;
+  background: rgba(0, 180, 0, 0.1);
+}
+
+.pipeline-step-result.processing {
+  border-color: var(--accent-primary);
+  background: rgba(0, 180, 216, 0.1);
+  animation: pulse 2s infinite;
+}
+
+.pipeline-step-result.failed {
+  border-color: #b40000;
+  background: rgba(180, 0, 0, 0.1);
+}
+
+.pipeline-step-result.pending {
+  border-color: var(--border-secondary);
+  background: var(--bg-tertiary);
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.step-header .step-number {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.step-header .step-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.step-header .step-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.step-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-left: 3.5rem;
+}
+
+.execution-log {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.log-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.log-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: var(--bg-primary);
+  border-radius: 6px;
+  border: 1px solid var(--border-secondary);
+}
+
+.log-timestamp {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: 'Roboto Mono', monospace;
+}
+
+.log-step {
+  font-size: 0.8rem;
+  color: var(--accent-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.log-message {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.log-details {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-left: 1rem;
+  border-left: 2px solid var(--border-secondary);
+  padding-left: 0.75rem;
+}
+
+.success-summary {
+  background: rgba(0, 180, 0, 0.1);
+  border: 1px solid rgba(0, 180, 0, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.success-summary h4 {
+  color: #00b400;
+  margin-bottom: 1rem;
+}
+
+.summary-details {
+  margin-bottom: 1.5rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.success-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.new-order-button,
+.print-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.new-order-button {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.new-order-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.print-button {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-secondary);
+}
+
+.print-button:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@media (max-width: 768px) {
+  .auto-order-card {
+    padding: 1rem;
+  }
+
+  .order-form {
+    padding: 1.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-step {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .execution-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .step-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .step-description {
+    margin-left: 0;
+  }
+
+  .summary-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+
+  .new-order-button,
+  .print-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
+
+<script>
+function printOrderSummary() {
+  window.print();
+}
+
+// Auto-scroll log entries
+function scrollToBottom() {
+  const logEntries = document.querySelector('.log-entries');
+  if (logEntries) {
+    logEntries.scrollTop = logEntries.scrollHeight;
+  }
+}
+
+// Auto-scroll when new content is added
+const observer = new MutationObserver(scrollToBottom);
+const logContainer = document.querySelector('.log-entries');
+if (logContainer) {
+  observer.observe(logContainer, { childList: true });
+}
+</script>
+
+{% endblock %}

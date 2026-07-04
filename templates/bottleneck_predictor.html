@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+{% set page_class = "bottleneck-predictor-page" %}
+
+{% block content %}
+<section class="chat-card">
+  <div class="heading-group">
+    <h1>Bottleneck Predictor</h1>
+    <p>Real-time bottleneck analysis as you pick parts. Exact percentage scores — "CPU will bottleneck GPU by 23% at 1440p" — before you buy.</p>
+  </div>
+
+  <form method="POST" class="predictor-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="cpu">CPU</label>
+        <select name="cpu" id="cpu" required>
+          <option value="">Select CPU...</option>
+          <optgroup label="AMD Ryzen">
+            <option value="Ryzen 5 5600">Ryzen 5 5600</option>
+            <option value="Ryzen 5 5600X">Ryzen 5 5600X</option>
+            <option value="Ryzen 7 5700X">Ryzen 7 5700X</option>
+            <option value="Ryzen 7 5800X">Ryzen 7 5800X</option>
+            <option value="Ryzen 9 5900X">Ryzen 9 5900X</option>
+            <option value="Ryzen 9 5950X">Ryzen 9 5950X</option>
+          </optgroup>
+          <optgroup label="Intel Core">
+            <option value="Intel i5-12400F">Intel i5-12400F</option>
+            <option value="Intel i5-12600K">Intel i5-12600K</option>
+            <option value="Intel i7-12700K">Intel i7-12700K</option>
+            <option value="Intel i9-12900K">Intel i9-12900K</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="gpu">GPU</label>
+        <select name="gpu" id="gpu" required>
+          <option value="">Select GPU...</option>
+          <optgroup label="NVIDIA RTX 30 Series">
+            <option value="RTX 3060">RTX 3060</option>
+            <option value="RTX 3060 Ti">RTX 3060 Ti</option>
+            <option value="RTX 3070">RTX 3070</option>
+            <option value="RTX 3070 Ti">RTX 3070 Ti</option>
+            <option value="RTX 3080">RTX 3080</option>
+            <option value="RTX 3080 Ti">RTX 3080 Ti</option>
+            <option value="RTX 3090">RTX 3090</option>
+          </optgroup>
+          <optgroup label="NVIDIA RTX 40 Series">
+            <option value="RTX 4070">RTX 4070</option>
+            <option value="RTX 4070 Ti">RTX 4070 Ti</option>
+            <option value="RTX 4080">RTX 4080</option>
+            <option value="RTX 4090">RTX 4090</option>
+          </optgroup>
+          <optgroup label="AMD RX 6000 Series">
+            <option value="RX 6600">RX 6600</option>
+            <option value="RX 6700 XT">RX 6700 XT</option>
+            <option value="RX 6800">RX 6800</option>
+            <option value="RX 6900 XT">RX 6900 XT</option>
+            <option value="RX 6950 XT">RX 6950 XT</option>
+          </optgroup>
+          <optgroup label="AMD RX 7000 Series">
+            <option value="RX 7600">RX 7600</option>
+            <option value="RX 7700 XT">RX 7700 XT</option>
+            <option value="RX 7800 XT">RX 7800 XT</option>
+            <option value="RX 7900 XT">RX 7900 XT</option>
+            <option value="RX 7900 XTX">RX 7900 XTX</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="ram">RAM (GB)</label>
+        <select name="ram" id="ram" required>
+          <option value="">Select RAM...</option>
+          <option value="8">8GB</option>
+          <option value="16">16GB</option>
+          <option value="32">32GB</option>
+          <option value="64">64GB</option>
+          <option value="128">128GB</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="resolution">Gaming Resolution</label>
+        <select name="resolution" id="resolution" required>
+          <option value="">Select resolution...</option>
+          <option value="1080p">1080p (Full HD)</option>
+          <option value="1440p">1440p (QHD)</option>
+          <option value="4K">4K (Ultra HD)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="settings">Graphics Settings</label>
+        <select name="settings" id="settings" required>
+          <option value="">Select settings...</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+          <option value="Ultra">Ultra</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="analyze-button">Analyze Bottleneck</button>
+  </form>
+
+  {% if analysis %}
+  <div class="analysis-results">
+    <h2>Bottleneck Analysis Results</h2>
+
+    <div class="specs-summary">
+      <div class="spec-item">
+        <strong>CPU:</strong> {{ specs.cpu }}
+      </div>
+      <div class="spec-item">
+        <strong>GPU:</strong> {{ specs.gpu }}
+      </div>
+      <div class="spec-item">
+        <strong>RAM:</strong> {{ specs.ram }}GB
+      </div>
+      <div class="spec-item">
+        <strong>Resolution:</strong> {{ specs.resolution }}
+      </div>
+      <div class="spec-item">
+        <strong>Settings:</strong> {{ specs.settings }}
+      </div>
+    </div>
+
+    <div class="bottleneck-display">
+      <div class="bottleneck-meter">
+        <div class="meter-labels">
+          <span>CPU Bottleneck</span>
+          <span>GPU Bottleneck</span>
+        </div>
+        <div class="meter-bars">
+          <div class="meter-bar cpu-bar" style="width: {{ analysis.cpu_bottleneck }}%">
+            <span class="percentage">{{ analysis.cpu_bottleneck }}%</span>
+          </div>
+          <div class="meter-bar gpu-bar" style="width: {{ analysis.gpu_bottleneck }}%">
+            <span class="percentage">{{ analysis.gpu_bottleneck }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottleneck-message">
+        {% if analysis.cpu_bottleneck > 0 %}
+          <p class="bottleneck-alert">⚠️ <strong>CPU will bottleneck GPU by {{ analysis.cpu_bottleneck }}% at {{ specs.resolution }}</strong></p>
+        {% elif analysis.gpu_bottleneck > 0 %}
+          <p class="bottleneck-alert">⚠️ <strong>GPU will bottleneck CPU by {{ analysis.gpu_bottleneck }}% at {{ specs.resolution }}</strong></p>
+        {% else %}
+          <p class="balanced-alert">✅ <strong>Excellent balance! No significant bottlenecks detected.</strong></p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="recommendations">
+      <h3>Recommendations</h3>
+      <ul>
+        {% for rec in analysis.recommendations %}
+        <li>{{ rec }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="performance-scores">
+      <h3>Performance Scores</h3>
+      <div class="scores-grid">
+        <div class="score-item">
+          <span class="score-label">CPU Score:</span>
+          <span class="score-value">{{ analysis.cpu_score }}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">GPU Score:</span>
+          <span class="score-value">{{ analysis.gpu_score }}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Effective GPU:</span>
+          <span class="score-value">{{ "%.1f"|format(analysis.gpu_effective) }}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-label">Overall Balance:</span>
+          <span class="score-value {{ 'good' if analysis.overall_balance == 'Good' else 'attention' }}">{{ analysis.overall_balance }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<style>
+.predictor-form {
+  margin-bottom: 2rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--border-primary);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.form-group select option {
+  background: rgba(4, 8, 22, 0.98);
+  color: var(--text-primary);
+}
+
+.form-group select option:hover {
+  background: rgba(94, 231, 255, 0.12);
+}
+
+.analyze-button {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.analyze-button:hover {
+  background: var(--accent-secondary);
+}
+
+.analysis-results {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: rgba(11, 18, 40, 0.76);
+  border-radius: 12px;
+  border: 2px solid var(--border-primary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.analysis-results h2 {
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+}
+
+.specs-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+.spec-item {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.bottleneck-meter {
+  margin-bottom: 1.5rem;
+}
+
+.meter-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.meter-bars {
+  display: flex;
+  gap: 2rem;
+  height: 40px;
+}
+
+.meter-bar {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  position: relative;
+  min-width: 100px;
+  transition: width 0.5s ease;
+}
+
+.cpu-bar {
+  background: linear-gradient(to right, var(--status-offline), #ff6b6b);
+}
+
+.gpu-bar {
+  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+}
+
+.percentage {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.bottleneck-message {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.bottleneck-alert {
+  color: var(--status-offline);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.balanced-alert {
+  color: var(--status-online);
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.recommendations {
+  margin-bottom: 2rem;
+}
+
+.recommendations h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.recommendations ul {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+}
+
+.recommendations li {
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
+  position: relative;
+  color: var(--text-primary);
+}
+
+.recommendations li:before {
+  content: "•";
+  color: var(--accent-primary);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+.performance-scores h3 {
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.scores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.score-item {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+.score-label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.score-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.score-value.good {
+  color: #4CAF50;
+}
+
+.score-value.attention {
+  color: #ff6b35;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .meter-bars {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .specs-summary {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+{% endblock %}

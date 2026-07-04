@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbyte - AI PC Builder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="{{ page_class | default('dashboard-page') }}">
+    <header class="site-header">
+        <div class="header-container">
+            <div class="brand">
+                <a href="{{ url_for('home') }}">Chatbyte</a>
+            </div>
+
+            <nav class="site-nav">
+                <ul>
+                    {% if 'username' in session %}
+                        <li><a href="{{ url_for('home') }}">Dashboard</a></li>
+                        <li><a href="{{ url_for('pcbuilder') }}">PC Builder</a></li>
+                        <li><a href="{{ url_for('voice_interaction') }}">Voice Chat</a></li>
+                        <li><a href="{{ url_for('reverse_builder') }}">Use Case Planner</a></li>
+                        <li><a href="{{ url_for('bottleneck_predictor') }}">Bottleneck Predictor</a></li>
+                        <li><a href="{{ url_for('upgrade_planner') }}">Upgrade Planner</a></li>
+                        <li><a href="{{ url_for('three_d_builder') }}">3D Builder</a></li>
+                        <li><a href="{{ url_for('purchase_integration') }}">Purchase Integration</a></li>
+                        <li><a href="{{ url_for('auto_order_execution') }}">Auto Order Execution</a></li>
+                        <li><a href="{{ url_for('profile') }}">Profile</a></li>
+                        <li><a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}">Login</a></li>
+                        <li><a href="{{ url_for('signup') }}">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-shell">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    {% if request.endpoint not in ['login', 'signup'] %}
+    <footer class="site-footer">
+        <div class="module-grid">
+            <div class="module-card">
+                <div class="module-title">
+                    <span class="status-indicator online"></span>
+                    AI Assistant
+                </div>
+                <div class="module-status">Online</div>
+                <div class="module-description">Intelligent PC building guidance powered by advanced AI</div>
+            </div>
+            <div class="module-card">
+                <div class="module-title">
+                    <span class="status-indicator online"></span>
+                    Voice Interface
+                </div>
+                <div class="module-status">Active</div>
+                <div class="module-description">Natural speech interaction with Claude AI</div>
+            </div>
+            <div class="module-card">
+                <div class="module-title">
+                    <span class="status-indicator online"></span>
+                    3D Visualization
+                </div>
+                <div class="module-status">Ready</div>
+                <div class="module-description">Interactive PC build visualization</div>
+            </div>
+            <div class="module-card">
+                <div class="module-title">
+                    <span class="status-indicator online"></span>
+                    Compatibility Engine
+                </div>
+                <div class="module-status">Operational</div>
+                <div class="module-description">Real-time component compatibility checking</div>
+            </div>
+            <div class="module-card">
+                <div class="module-title">
+                    <span class="status-indicator online"></span>
+                    Purchase Integration
+                </div>
+                <div class="module-status">Active</div>
+                <div class="module-description">Direct search links with real-time pricing</div>
+            </div>
+            <div class="module-card">
+                <div class="module-title">
+                    <span class="status-indicator online"></span>
+                    Auto Order Execution
+                </div>
+                <div class="module-status">PRO</div>
+                <div class="module-description">Automated order pipeline with verification</div>
+            </div>
+        </div>
+        <p>� 2026 Chatbyte. Advanced AI PC Building Platform.</p>
+    </footer>
+    {% endif %}
+</body>
+</html>

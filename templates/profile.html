@@ -1,0 +1,17 @@
+﻿{% extends "base.html" %}
+{% set page_class = "profile-page" %}
+
+{% block content %}
+<section class="section-card profile-card">
+  <div class="heading-group">
+    <h1>Profile</h1>
+    <p>Manage your account and review your settings for a better PC building experience.</p>
+  </div>
+
+  <p><strong>Username:</strong> {{ username }}</p>
+  <div class="profile-links">
+    <a href="{{ url_for('home') }}">Dashboard</a>
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</section>
+{% endblock %}

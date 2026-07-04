@@ -1,0 +1,9 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-SocketIO
+requests
+python-dotenv
+openai
+anthropic
+eventlet

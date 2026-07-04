@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+{% set page_class = "purchase-page" %}
+
+{% block content %}
+<section class="purchase-card">
+  <div class="heading-group">
+    <h1>🛒 Direct Purchase Integration</h1>
+    <p>Get optimized PC builds with real-time pricing and retailer search links</p>
+  </div>
+
+  {% if not build %}
+  <!-- Build Configuration Form -->
+  <div class="config-section">
+    <h2>Configure Your Build</h2>
+    <form method="POST" class="build-form">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="budget">Budget (₹)</label>
+          <input type="number" id="budget" name="budget" min="41500" max="415000" value="124500" required>
+          <div class="budget-hint">Recommended: ₹66,400-124,500 for balanced builds</div>
+        </div>
+
+        <div class="form-group">
+          <label for="use_case">Primary Use Case</label>
+          <select id="use_case" name="use_case" required>
+            <option value="gaming">Gaming</option>
+            <option value="content_creation">Content Creation</option>
+            <option value="productivity">Productivity/Office</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cpu_brand">CPU Brand Preference</label>
+          <select id="cpu_brand" name="cpu_brand">
+            <option value="any">No Preference</option>
+            <option value="amd">AMD</option>
+            <option value="intel">Intel</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="gpu_brand">GPU Brand Preference</label>
+          <select id="gpu_brand" name="gpu_brand">
+            <option value="any">No Preference</option>
+            <option value="nvidia">NVIDIA</option>
+            <option value="amd">AMD</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="priority">Build Priority</label>
+          <select id="priority" name="priority">
+            <option value="balanced">Balanced Performance</option>
+            <option value="performance">Maximum Performance</option>
+            <option value="budget">Stay Under Budget</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="generate-button">
+          <span class="button-icon">⚡</span>
+          Generate Optimized Build
+        </button>
+      </div>
+    </form>
+  </div>
+  {% else %}
+  <!-- Build Results -->
+  <div class="build-results">
+    <div class="build-header">
+      <h2>Your Optimized Build</h2>
+      <div class="build-meta">
+        <span class="budget-tag">${{ "%.0f"|format(budget) }} Budget</span>
+        <span class="use-case-tag">{{ use_case|replace('_', ' ')|title }}</span>
+      </div>
+    </div>
+
+    <div class="components-grid">
+      {% for component, data in build.items() %}
+        {% if component != 'total_cost' %}
+        <div class="component-card">
+          <div class="component-header">
+            <h3>{{ component|upper() }}</h3>
+            <div class="component-price">₹{{ "%.0f"|format(data.price) }}</div>
+          </div>
+          <div class="component-name">{{ data.name }}</div>
+          <div class="component-retailer">
+            <span class="retailer-badge {{ data.retailer|lower() }}">
+              {{ data.retailer }}
+            </span>
+            {% if data.in_stock %}
+              <span class="stock-status in-stock">✓ In Stock</span>
+            {% else %}
+              <span class="stock-status out-of-stock">✗ Out of Stock</span>
+            {% endif %}
+          </div>
+          <a href="{{ data.url }}" target="_blank" class="purchase-link">
+            <span class="link-icon">�</span>
+            Search & Buy
+          </a>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="build-summary">
+      <div class="summary-card">
+        <h3>Build Summary</h3>
+        <div class="summary-details">
+          <div class="summary-row">
+            <span>Components Total:</span>
+            <span class="total-price">₹{{ "%.0f"|format(build.total_cost) }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Estimated Tax (18%):</span>
+            <span>₹{{ "%.0f"|format(build.total_cost * 0.18) }}</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping:</span>
+            <span>₹0 (Free shipping on orders over ₹2,905)</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Grand Total:</span>
+            <span class="grand-total">₹{{ "%.0f"|format(build.total_cost * 1.18) }}</span>
+          </div>
+        </div>
+
+        <div class="build-actions">
+          <a href="{{ url_for('purchase_summary', build_id='sample123') }}" class="checkout-button">
+            <span class="button-icon">📋</span>
+            Review & Checkout
+          </a>
+          <button onclick="window.location.reload()" class="regenerate-button">
+            <span class="button-icon">🔄</span>
+            Regenerate Build
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<style>
+.purchase-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.config-section h2,
+.build-results h2 {
+  color: var(--accent-primary);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.build-form {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.budget-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.form-actions {
+  text-align: center;
+}
+
+.generate-button {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.generate-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.build-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.build-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.budget-tag,
+.use-case-tag {
+  background: var(--accent-hover);
+  color: var(--accent-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.components-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.component-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.component-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.component-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.component-header h3 {
+  color: var(--accent-primary);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.component-price {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+}
+
+.component-name {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.component-retailer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.retailer-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.retailer-badge.amazon {
+  background: rgba(255, 153, 0, 0.2);
+  color: #ff9900;
+}
+
+.retailer-badge.newegg {
+  background: rgba(255, 102, 102, 0.2);
+  color: #ff6666;
+}
+
+.retailer-badge.bestbuy {
+  background: rgba(0, 180, 216, 0.2);
+  color: var(--accent-primary);
+}
+
+.stock-status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stock-status.in-stock {
+  color: var(--status-online);
+}
+
+.stock-status.out-of-stock {
+  color: var(--status-offline);
+}
+
+.purchase-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.purchase-link:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-glow);
+}
+
+.build-summary {
+  margin-top: 2rem;
+}
+
+.summary-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.summary-card h3 {
+  color: var(--accent-primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.summary-details {
+  margin-bottom: 2rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+}
+
+.total-row {
+  border-top: 2px solid var(--accent-primary);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-weight: 600;
+}
+
+.total-price,
+.grand-total {
+  color: var(--accent-secondary);
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+}
+
+.grand-total {
+  font-size: 1.4rem;
+  color: var(--status-online);
+}
+
+.build-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.checkout-button,
+.regenerate-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.checkout-button {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.checkout-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.regenerate-button {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-secondary);
+}
+
+.regenerate-button:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+@media (max-width: 768px) {
+  .purchase-card {
+    padding: 1rem;
+  }
+
+  .build-form {
+    padding: 1.5rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .components-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .build-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .build-meta {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .build-actions {
+    flex-direction: column;
+  }
+
+  .checkout-button,
+  .regenerate-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
+
+{% endblock %}

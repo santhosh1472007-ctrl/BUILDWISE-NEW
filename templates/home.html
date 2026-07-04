@@ -1,0 +1,342 @@
+﻿{% extends "base.html" %}
+{% set page_class = "dashboard-page" %}
+
+{% block content %}
+<section class="dashboard-hero">
+  <div class="heading-group">
+    <h1>Welcome back, {{ username }}</h1>
+    <p>Advanced AI PC Building Platform - Your intelligent companion for creating the perfect system</p>
+  </div>
+
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <div class="stat-number">8</div>
+      <div class="stat-label">AI Modules</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Build Possibilities</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">AI Availability</div>
+    </div>
+  </div>
+</section>
+
+<section class="dashboard-modules">
+  <h2>AI Build Modules</h2>
+  <div class="module-grid">
+    <a href="{{ url_for('pcbuilder') }}" class="module-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        PC Builder Chat
+      </div>
+      <div class="module-status">Interactive AI Assistant</div>
+      <div class="module-description">Get real-time PC building advice with our intelligent chat system. Supports beginner and expert modes.</div>
+    </a>
+
+    <a href="{{ url_for('voice_interaction') }}" class="module-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        Voice Interaction
+      </div>
+      <div class="module-status">Speech-to-Text AI</div>
+      <div class="module-description">Speak naturally to get PC building guidance. Powered by Claude AI with text-to-speech responses.</div>
+    </a>
+
+    <a href="{{ url_for('reverse_builder') }}" class="module-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        Use Case Planner
+      </div>
+      <div class="module-status">AI-Powered Builds</div>
+      <div class="module-description">Get complete PC builds tailored to your specific use case - gaming, content creation, or productivity.</div>
+    </a>
+
+    <a href="{{ url_for('bottleneck_predictor') }}" class="module-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        Bottleneck Predictor
+      </div>
+      <div class="module-status">Performance Analysis</div>
+      <div class="module-description">Analyze your PC components for bottlenecks and optimization recommendations in real-time.</div>
+    </a>
+
+    <a href="{{ url_for('upgrade_planner') }}" class="module-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        Upgrade Planner
+      </div>
+      <div class="module-status">3-Phase Roadmap</div>
+      <div class="module-description">Strategic upgrade planning with phased recommendations for maximum performance gains.</div>
+    </a>
+
+    <a href="{{ url_for('three_d_builder') }}" class="module-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        3D Builder
+      </div>
+      <div class="module-status">Visual PC Design</div>
+      <div class="module-description">Interactive 3D visualization of your PC build with component placement and airflow analysis.</div>
+    </a>
+
+    <a href="{{ url_for('purchase_integration') }}" class="module-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        Purchase Integration
+      </div>
+      <div class="module-status">Direct Buy Links</div>
+      <div class="module-description">Generate optimized builds with real-time pricing and direct search links from top retailers.</div>
+    </a>
+    <a href="{{ url_for('auto_order_execution') }}" class="module-card pro-card">
+      <div class="module-title">
+        <span class="status-indicator online"></span>
+        Auto Order Execution
+        <span class="pro-badge">PRO</span>
+      </div>
+      <div class="module-status">Automated Pipeline</div>
+      <div class="module-description">Automated order placement pipeline with verification, approval, stock checks, payment processing, and confirmations.</div>
+    </a>  </div>
+</section>
+
+<section class="dashboard-features">
+  <h2>Platform Features</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>🤖 Advanced AI</h3>
+      <p>Powered by Claude AI and GPT models for intelligent PC building guidance</p>
+    </div>
+    <div class="feature-card">
+      <h3>🎤 Voice Control</h3>
+      <p>Natural speech interaction with Web Speech API and text-to-speech responses</p>
+    </div>
+    <div class="feature-card">
+      <h3>🔍 Real-time Analysis</h3>
+      <p>Instant compatibility checking and bottleneck prediction</p>
+    </div>
+    <div class="feature-card">
+      <h3>📊 Performance Metrics</h3>
+      <p>Detailed performance analysis and optimization recommendations</p>
+    </div>
+    <div class="feature-card">
+      <h3>🎯 Use Case Optimization</h3>
+      <p>Tailored builds for gaming, content creation, and professional workloads</p>
+    </div>
+    <div class="feature-card">
+      <h3>📱 Responsive Design</h3>
+      <p>Optimized for all devices with modern dark UI and smooth animations</p>
+    </div>
+  </div>
+</section>
+
+<style>
+.dashboard-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 2rem 0 1rem;
+}
+
+.dashboard-hero h1 {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.dashboard-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  text-align: center;
+  min-width: 140px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.stat-number {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-modules h2,
+.dashboard-features h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--accent-primary);
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.module-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-md);
+}
+
+.module-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.module-card:hover::before {
+  opacity: 1;
+}
+
+.module-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-4px);
+}
+
+.module-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pro-badge {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 6px 20px rgba(94, 231, 255, 0.25);
+}
+
+.pro-card {
+  border: 1px solid rgba(94, 231, 255, 0.4);
+  background: linear-gradient(135deg, rgba(94, 231, 255, 0.08), rgba(139, 92, 246, 0.08));
+}
+
+.pro-card:hover {
+  border-color: var(--accent-secondary);
+  box-shadow: var(--shadow-glow);
+}
+
+.module-status {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.module-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-2px);
+}
+
+.feature-card h3 {
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.feature-card p {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .dashboard-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .module-grid,
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,578 @@
+{% extends "base.html" %}
+{% set page_class = "builder-page" %}
+
+{% block content %}
+<section class="builder-card">
+  <div class="heading-group">
+    <h1>3D PC Builder</h1>
+    <p>Interactive 3D visualization of your PC build with real-time compatibility checking and component placement</p>
+  </div>
+
+  <div class="builder-grid">
+    <div class="builder-panel">
+      <h2>Component Selection</h2>
+
+      <div class="component-group">
+        <div class="select-row">
+          <label for="cpu-select">CPU</label>
+          <select id="cpu-select">
+            <option value="i5-13400f">Intel Core i5-13400F (LGA1700)</option>
+            <option value="ryzen-5-7600">AMD Ryzen 5 7600 (AM5)</option>
+            <option value="i7-13700k">Intel Core i7-13700K (LGA1700)</option>
+          </select>
+        </div>
+
+        <div class="select-row">
+          <label for="gpu-select">GPU</label>
+          <select id="gpu-select">
+            <option value="rtx-4060">NVIDIA RTX 4060</option>
+            <option value="rtx-4070">NVIDIA RTX 4070</option>
+            <option value="rx-7600-xt">AMD RX 7600 XT</option>
+          </select>
+        </div>
+
+        <div class="select-row">
+          <label for="ram-select">RAM</label>
+          <select id="ram-select">
+            <option value="16gb-ddr5">16GB DDR5 5200</option>
+            <option value="32gb-ddr5">32GB DDR5 5600</option>
+          </select>
+        </div>
+
+        <div class="select-row">
+          <label for="mobo-select">Motherboard</label>
+          <select id="mobo-select">
+            <option value="b660">B660 ATX (LGA1700)</option>
+            <option value="b650">B650 ATX (AM5)</option>
+            <option value="z790">Z790 ATX (LGA1700)</option>
+          </select>
+        </div>
+
+        <div class="select-row">
+          <label for="psu-select">PSU</label>
+          <select id="psu-select">
+            <option value="650w">650W 80+ Bronze</option>
+            <option value="750w">750W 80+ Gold</option>
+            <option value="850w">850W 80+ Gold</option>
+          </select>
+        </div>
+
+        <div class="select-row">
+          <label for="storage-select">Storage</label>
+          <select id="storage-select">
+            <option value="1tb-nvme">1TB NVMe SSD</option>
+            <option value="2tb-sata">2TB SATA SSD</option>
+            <option value="4tb-hdd">4TB HDD</option>
+          </select>
+        </div>
+
+        <div class="select-row">
+          <label for="case-select">Case</label>
+          <select id="case-select">
+            <option value="mid-airflow">Mid Tower Airflow</option>
+            <option value="compact">Compact Modern Case</option>
+            <option value="full-tower">Full Tower Premium</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="builder-preview">
+      <h2>3D Visualization</h2>
+      <div id="preview" class="preview-canvas">
+        <div id="builderCanvas" style="position:relative; width:100%; height:100%; min-height:400px;"></div>
+        <div id="preview-placeholder" class="preview-placeholder">
+          <div class="loading-indicator">
+            <div class="loading-spinner"></div>
+            <p>Initializing 3D Engine...</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="compatibility-card">
+        <h3>Compatibility Analysis</h3>
+        <div class="compatibility-status" id="compatibility-status">
+          <div class="status-item">
+            <span class="status-indicator offline"></span>
+            <span>CPU-Motherboard Socket</span>
+          </div>
+          <div class="status-item">
+            <span class="status-indicator offline"></span>
+            <span>Power Requirements</span>
+          </div>
+          <div class="status-item">
+            <span class="status-indicator offline"></span>
+            <span>Case Clearance</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <h3>Build Summary</h3>
+        <div class="summary-metrics">
+          <div class="metric">
+            <span class="metric-label">Total Cost:</span>
+            <span class="metric-value" id="summary-cost">$0</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Performance:</span>
+            <span class="metric-value" id="summary-performance">N/A</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Power Draw:</span>
+            <span class="metric-value" id="summary-power">0W</span>
+          </div>
+        </div>
+        <div class="summary-comment" id="summary-comment">Select components to begin building your PC</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.builder-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.builder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.builder-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.builder-panel h2 {
+  color: var(--accent-primary);
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.component-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.select-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.select-row label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.select-row select {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  padding: 0.75rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.select-row select:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.builder-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.builder-preview h2 {
+  color: var(--accent-primary);
+  font-size: 1.2rem;
+}
+
+.preview-canvas {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  min-height: 400px;
+}
+
+.preview-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.loading-indicator {
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-secondary);
+  border-top: 3px solid var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.compatibility-card,
+.summary-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.compatibility-card h3,
+.summary-card h3 {
+  color: var(--accent-primary);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.compatibility-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.summary-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.metric:last-child {
+  border-bottom: none;
+}
+
+.metric-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.metric-value {
+  color: var(--accent-primary);
+  font-weight: 600;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.summary-comment {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-secondary);
+}
+
+@media (max-width: 1024px) {
+  .builder-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-panel {
+    order: 2;
+  }
+
+  .builder-preview {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .builder-card {
+    padding: 1rem;
+  }
+
+  .builder-grid {
+    gap: 1rem;
+  }
+
+  .component-group {
+    gap: 0.75rem;
+  }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.min.js"></script>
+<script>
+  const components = {
+    cpu: {
+      'i5-13400f': { label: 'Intel Core i5-13400F', socket: 'LGA1700', price: 280, perf: 7 },
+      'ryzen-5-7600': { label: 'AMD Ryzen 5 7600', socket: 'AM5', price: 300, perf: 8 },
+      'i7-13700k': { label: 'Intel Core i7-13700K', socket: 'LGA1700', price: 420, perf: 9 },
+    },
+    gpu: {
+      'rtx-4060': { label: 'RTX 4060', power: 115, price: 350, perf: 7 },
+      'rtx-4070': { label: 'RTX 4070', power: 200, price: 600, perf: 9 },
+      'rx-7600-xt': { label: 'RX 7600 XT', power: 170, price: 330, perf: 6 },
+    },
+    ram: {
+      '16gb-ddr5': { label: '16GB DDR5 5200', price: 120, perf: 7 },
+      '32gb-ddr5': { label: '32GB DDR5 5600', price: 210, perf: 9 },
+    },
+    mobo: {
+      'b660': { label: 'B660 ATX', socket: 'LGA1700', price: 160 },
+      'b650': { label: 'B650 ATX', socket: 'AM5', price: 190 },
+      'z790': { label: 'Z790 ATX', socket: 'LGA1700', price: 240 },
+    },
+    psu: {
+      '650w': { label: '650W Bronze', watt: 650, price: 85 },
+      '750w': { label: '750W Gold', watt: 750, price: 130 },
+      '850w': { label: '850W Gold', watt: 850, price: 160 },
+    },
+    storage: {
+      '1tb-nvme': { label: '1TB NVMe SSD', price: 80, perf: 8 },
+      '2tb-sata': { label: '2TB SATA SSD', price: 130, perf: 6 },
+      '4tb-hdd': { label: '4TB HDD', price: 90, perf: 4 },
+    },
+    case: {
+      'mid-airflow': { label: 'Mid Tower Airflow', price: 90 },
+      'compact': { label: 'Compact Case', price: 110 },
+      'full-tower': { label: 'Full Tower', price: 140 },
+    }
+  };
+
+  const selectors = ['cpu', 'gpu', 'ram', 'mobo', 'psu', 'storage', 'case'];
+  const state = {};
+  let scene, camera, renderer, currentMeshes = {};
+
+  function updateState() {
+    selectors.forEach(key => {
+      const element = document.getElementById(`${key}-select`);
+      state[key] = components[key][element.value];
+    });
+  }
+
+  function renderCompatibility() {
+    const statusContainer = document.getElementById('compatibility-status');
+    statusContainer.innerHTML = '';
+
+    const cpuMatches = state.cpu.socket === state.mobo.socket;
+    const powerHeadroom = state.psu.watt - state.gpu.power;
+    const balanced = Math.abs(state.cpu.perf - state.gpu.perf) <= 2;
+
+    addStatus('CPU / Motherboard socket', cpuMatches ? 'Compatible' : 'Mismatch', cpuMatches);
+    addStatus('PSU wattage', powerHeadroom >= 100 ? 'Ample wattage' : powerHeadroom >= 0 ? 'Sufficient wattage' : 'Insufficient wattage', powerHeadroom >= 0);
+    addStatus('Build balance', balanced ? 'Balanced performance' : 'Imbalanced tiers', balanced);
+
+    if (state.cpu.socket === 'AM5' && state.ram.label.includes('DDR5') === false) {
+      addStatus('RAM type', 'DDR5 required for AM5', false);
+    }
+  }
+
+  function addStatus(title, message, ok) {
+    const row = document.createElement('div');
+    row.className = `status-item ${ok ? 'ok' : 'warn'}`;
+    row.innerHTML = `<span>${title}</span><strong>${message}</strong>`;
+    document.getElementById('compatibility-status').appendChild(row);
+  }
+
+  function updateSummary() {
+    const totalCost = selectors.reduce((sum, key) => sum + (state[key].price || 0), 0);
+    const perfParts = [state.cpu.perf, state.gpu.perf, state.ram.perf || 0, state.storage.perf || 0].filter(Boolean);
+    const averagePerf = perfParts.reduce((sum, value) => sum + value, 0) / perfParts.length;
+    const balanceText = averagePerf >= 7 ? 'High performance, well matched' : 'Good budget balance';
+
+    document.getElementById('summary-cost').textContent = `Total cost: $${totalCost}`;
+    document.getElementById('summary-performance').textContent = `Performance balance: ${balanceText}`;
+    document.getElementById('summary-comment').textContent = `Estimated build strength: ${averagePerf.toFixed(1)} / 10.`;
+  }
+
+  function createPartMesh(key, part) {
+    const [x, y, z] = part.size || [0.4, 0.1, 0.4];
+    const geometry = new THREE.BoxGeometry(x, y, z);
+    const material = new THREE.MeshStandardMaterial({ color: part.color || 0x2b7ebd, roughness: 0.4, metalness: 0.25 });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.userData = { key };
+    return mesh;
+  }
+
+  function updatePreview() {
+    const placeholder = document.getElementById('preview-placeholder');
+    if (placeholder) placeholder.style.display = 'none';
+
+    if (!scene) {
+      setupPreview();
+    }
+
+    selectors.forEach(key => {
+      const part = state[key];
+      if (!part) return;
+
+      if (currentMeshes[key]) {
+        scene.remove(currentMeshes[key]);
+      }
+
+      const mesh = createPartMesh(key, part);
+      switch (key) {
+        case 'case':
+          mesh.position.set(0, 0.6, 0);
+          mesh.material.opacity = 0.3;
+          mesh.material.transparent = true;
+          break;
+        case 'mobo':
+          mesh.position.set(0, 0.08, 0);
+          break;
+        case 'gpu':
+          mesh.position.set(0, 0.24, 0.12);
+          break;
+        case 'cpu':
+          mesh.position.set(-0.35, 0.16, 0);
+          break;
+        case 'ram':
+          mesh.position.set(0.35, 0.16, 0);
+          break;
+        case 'storage':
+          mesh.position.set(0.75, 0.12, 0);
+          break;
+        case 'psu':
+          mesh.position.set(-0.72, 0.05, 0.22);
+          break;
+      }
+
+      currentMeshes[key] = mesh;
+      scene.add(mesh);
+    });
+
+    if (renderer) {
+      renderer.render(scene, camera);
+    }
+  }
+
+  function setupPreview() {
+    const container = document.getElementById('builderCanvas');
+    container.innerHTML = '';
+    container.style.position = 'relative';
+    const width = Math.max(container.clientWidth, 320);
+    const height = Math.max(container.clientHeight, 320);
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xe8f6fb);
+
+    camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 1000);
+    camera.position.set(0, 1.6, 4.2);
+
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(width, height);
+      renderer.domElement.style.width = '100%';
+      renderer.domElement.style.height = '100%';
+      renderer.domElement.style.display = 'block';
+      container.appendChild(renderer.domElement);
+      const placeholder = document.getElementById('preview-placeholder');
+      if (placeholder) placeholder.style.display = 'none';
+    } catch (error) {
+      const placeholder = document.getElementById('preview-placeholder');
+      if (placeholder) {
+        placeholder.textContent = 'WebGL is unavailable in this browser.';
+      }
+      console.error('Three.js renderer initialization failed:', error);
+      return;
+    }
+
+    const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+    scene.add(ambient);
+
+    const directional = new THREE.DirectionalLight(0xffffff, 0.7);
+    directional.position.set(3, 5, 4);
+    scene.add(directional);
+
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(4, 4),
+      new THREE.MeshStandardMaterial({ color: 0xd7eef6, roughness: 0.95 })
+    );
+    floor.rotation.x = -Math.PI / 2;
+    floor.position.y = 0;
+    scene.add(floor);
+
+    const grid = new THREE.GridHelper(4, 8, 0x0b77b1, 0x0b77b1);
+    grid.material.opacity = 0.15;
+    grid.material.transparent = true;
+    scene.add(grid);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      Object.values(currentMeshes).forEach(mesh => {
+        if (mesh) mesh.rotation.y += 0.004;
+      });
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      const newWidth = Math.max(container.clientWidth, 320);
+      const newHeight = Math.max(container.clientHeight, 320);
+      camera.aspect = newWidth / newHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(newWidth, newHeight);
+    });
+  }
+
+  function refreshBuild() {
+    updateState();
+    renderCompatibility();
+    updateSummary();
+    updatePreview();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    selectors.forEach(key => {
+      const element = document.getElementById(`${key}-select`);
+      element.addEventListener('change', refreshBuild);
+    });
+
+    setupPreview();
+    refreshBuild();
+  });
+</script>
+{% endblock %}

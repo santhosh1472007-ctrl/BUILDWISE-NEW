@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+{% set page_class = "summary-page" %}
+
+{% block content %}
+<section class="summary-card">
+  <div class="heading-group">
+    <h1>📋 Purchase Summary</h1>
+    <p>Review your build before proceeding to checkout</p>
+  </div>
+
+  <div class="summary-content">
+    <div class="build-overview">
+      <h2>Build Overview</h2>
+      <div class="overview-grid">
+        <div class="overview-item">
+          <span class="label">Build ID:</span>
+          <span class="value">#{{ build_id }}</span>
+        </div>
+        <div class="overview-item">
+          <span class="label">Generated:</span>
+          <span class="value">{{ "now"|strftime("%Y-%m-%d %H:%M") }}</span>
+        </div>
+        <div class="overview-item">
+          <span class="label">Status:</span>
+          <span class="value status-ready">Ready for Purchase</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="components-list">
+      <h2>Components</h2>
+      <div class="components-table">
+        {% for component, data in build.items() %}
+          {% if component != 'total_cost' %}
+          <div class="component-row">
+            <div class="component-info">
+              <div class="component-type">{{ component|upper() }}</div>
+              <div class="component-name">{{ data.name }}</div>
+              <div class="component-retailer">
+                <span class="retailer-badge {{ data.retailer|lower() }}">{{ data.retailer }}</span>
+                {% if data.in_stock %}
+                  <span class="stock-indicator in-stock">In Stock</span>
+                {% else %}
+                  <span class="stock-indicator out-of-stock">Out of Stock</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="component-price">
+              <div class="price">₹{{ "%.0f"|format(data.price) }}</div>
+              <a href="{{ data.url }}" target="_blank" class="view-link">Search Product</a>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="pricing-breakdown">
+      <h2>Pricing Breakdown</h2>
+      <div class="pricing-table">
+        <div class="pricing-row">
+          <span class="pricing-label">Components Subtotal:</span>
+          <span class="pricing-value">₹{{ "%.2f"|format(build.total_cost) }}</span>
+        </div>
+        <div class="pricing-row">
+          <span class="pricing-label">Estimated Tax (18%):</span>
+          <span class="pricing-value">₹{{ "%.2f"|format(build.total_cost * 0.18) }}</span>
+        </div>
+        <div class="pricing-row">
+          <span class="pricing-label">Shipping & Handling:</span>
+          <span class="pricing-value">₹0.00 <span class="free-shipping">(Free)</span></span>
+        </div>
+        <div class="pricing-row total-row">
+          <span class="pricing-label">Total:</span>
+          <span class="pricing-value total-amount">₹{{ "%.2f"|format(build.total_cost * 1.18) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="purchase-notice">
+      <div class="notice-icon">⚠️</div>
+      <div class="notice-content">
+        <h3>Important Purchase Information</h3>
+        <ul>
+          <li>Prices are current estimates and may vary at time of purchase</li>
+          <li>Click "Search Product" links to find current availability and pricing on retailer websites</li>
+          <li>Taxes calculated based on estimated 18% GST rate (actual rate may vary by state)</li>
+          <li>Free shipping applies to orders over ₹2,905 (may vary by retailer)</li>
+          <li>Compatibility and build quality are optimized by our AI system</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="summary-actions">
+      <button onclick="window.history.back()" class="back-button">
+        <span class="button-icon">←</span>
+        Back to Build
+      </button>
+      <button onclick="proceedToCheckout()" class="checkout-button">
+        <span class="button-icon">🛒</span>
+        Proceed to Checkout
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+.summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.summary-content h2 {
+  color: var(--accent-primary);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: 0.5rem;
+}
+
+.build-overview {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.overview-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.overview-item .label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.overview-item .value {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.status-ready {
+  color: var(--status-online);
+  font-weight: 600;
+}
+
+.components-list {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.components-table {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.component-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.component-row:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.component-info {
+  flex: 1;
+}
+
+.component-type {
+  font-size: 0.8rem;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.component-name {
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.component-retailer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.retailer-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.retailer-badge.amazon {
+  background: rgba(255, 153, 0, 0.2);
+  color: #ff9900;
+}
+
+.retailer-badge.newegg {
+  background: rgba(255, 102, 102, 0.2);
+  color: #ff6666;
+}
+
+.retailer-badge.bestbuy {
+  background: rgba(0, 180, 216, 0.2);
+  color: var(--accent-primary);
+}
+
+.stock-indicator {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stock-indicator.in-stock {
+  color: var(--status-online);
+}
+
+.stock-indicator.out-of-stock {
+  color: var(--status-offline);
+}
+
+.component-price {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.component-price .price {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+}
+
+.view-link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.view-link:hover {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+}
+
+.pricing-breakdown {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.pricing-table {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.pricing-row:last-child {
+  border-bottom: none;
+}
+
+.pricing-label {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.pricing-value {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.total-row {
+  border-top: 2px solid var(--accent-primary);
+  margin-top: 1rem;
+  padding-top: 1rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.total-amount {
+  color: var(--status-online);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.free-shipping {
+  font-size: 0.8rem;
+  color: var(--status-online);
+  font-weight: 400;
+}
+
+.purchase-notice {
+  background: rgba(255, 170, 0, 0.1);
+  border: 1px solid rgba(255, 170, 0, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.notice-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.notice-content h3 {
+  color: #ffaa00;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.notice-content ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.notice-content li {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 0.25rem;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-secondary);
+}
+
+.back-button,
+.checkout-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.back-button {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-secondary);
+}
+
+.back-button:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.checkout-button {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.checkout-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+@media (max-width: 768px) {
+  .summary-card {
+    padding: 1rem;
+  }
+
+  .component-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .component-price {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .pricing-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .summary-actions {
+    flex-direction: column;
+  }
+
+  .back-button,
+  .checkout-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .purchase-notice {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+</style>
+
+<script>
+function proceedToCheckout() {
+  // In a real implementation, this would redirect to a checkout page
+  // or open multiple tabs for each retailer
+  const components = {{ build|tojson }};
+  let message = "Ready to purchase your optimized PC build! 📋\n\n";
+  message += "Build Summary:\n";
+  message += "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+
+  let total = 0;
+  for (const [component, data] of Object.entries(components)) {
+    if (component !== 'total_cost') {
+      message += `${component.toUpperCase()}: ${data.name}\n`;
+      message += `Price: ₹${data.price} (${data.retailer})\n`;
+      message += `Search Link: ${data.url}\n\n`;
+      total += data.price;
+    }
+  }
+
+  message += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  message += `Total: ₹${total.toFixed(2)}\n`;
+  message += `Estimated with tax: ₹${(total * 1.18).toFixed(2)}\n\n`;
+  message += "Click the search links above to find and purchase from each retailer.";
+
+  // Copy to clipboard and show alert
+  navigator.clipboard.writeText(message).then(() => {
+    alert("Build summary copied to clipboard! Use the search links to find and purchase from each retailer.");
+  }).catch(() => {
+    alert("Build summary generated! Check the console for the full purchase guide.");
+    console.log(message);
+  });
+}
+</script>
+
+{% endblock %}

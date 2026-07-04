@@ -1,0 +1,229 @@
+﻿{% extends "base.html" %}
+{% set page_class = "auth-page" %}
+
+{% block content %}
+<section class="auth-card">
+  <div class="auth-header">
+    <h1>Join AI PC Builder</h1>
+    <p>Create your account to access advanced PC building intelligence, personalized recommendations, and cutting-edge build tools</p>
+  </div>
+
+  {% if error_message %}
+  <div class="auth-message error">{{ error_message }}</div>
+  {% endif %}
+
+  <form method="POST" action="{{ url_for('signup') }}" class="auth-form">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input id="username" type="text" name="username" placeholder="Choose a username" required autocomplete="username">
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" placeholder="Enter your email" required autocomplete="email">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" type="password" name="password" placeholder="Create a secure password" required autocomplete="new-password">
+    </div>
+
+    <button class="auth-button" type="submit">Create Account</button>
+  </form>
+
+  <div class="oauth-divider"><span>or</span></div>
+  <a class="oauth-button" href="{{ url_for('google_login') }}">Continue with Google</a>
+
+  <div class="auth-links">
+    <p>Already have an account? <a href="{{ url_for('login') }}">Sign In</a></p>
+  </div>
+</section>
+
+<style>
+.auth-card {
+  max-width: 400px;
+  margin: 4rem auto;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: var(--shadow-card);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.auth-header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.auth-message {
+  margin-bottom: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.auth-message.error {
+  background: rgba(251, 113, 133, 0.15);
+  color: #fecdd3;
+  border: 1px solid rgba(251, 113, 133, 0.35);
+}
+
+.auth-message.success {
+  background: rgba(74, 222, 128, 0.15);
+  color: #bbf7d0;
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+.auth-button {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-primary);
+  margin-top: 0.5rem;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.oauth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.oauth-divider::before,
+.oauth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-secondary);
+}
+
+.oauth-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.oauth-button:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-secondary);
+}
+
+.auth-links p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.auth-links a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+  color: var(--accent-secondary);
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    margin: 2rem 1rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .auth-header h1 {
+    font-size: 1.5rem;
+  }
+}
+</style>
+
+{% endblock %}

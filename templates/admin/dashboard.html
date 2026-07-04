@@ -1,0 +1,26 @@
+﻿{% extends "base.html" %}
+{% set page_class = "admin-page" %}
+
+{% block content %}
+<section class="section-card table-card">
+  <div class="heading-group">
+    <h1>Admin Dashboard</h1>
+    <p>Review registered users and monitor activity from a clean admin panel.</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Username</th><th>Email</th></tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
