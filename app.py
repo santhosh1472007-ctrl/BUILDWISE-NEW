@@ -1,6 +1,7 @@
 import os
 import difflib
 import re
+from datetime import timedelta
 from urllib.parse import urlencode, urlparse
 import openai
 import anthropic
@@ -16,38 +17,46 @@ from admin_routes import admin_bp
 from models import db, User
 
 # ---------------- APP SETUP ----------------
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(BASE_DIR, "instance", "users.db")
-
 migrate = Migrate()
 socketio = SocketIO()
 
 
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
+    load_dotenv()
+
+    app_dir = os.path.abspath(os.path.dirname(__file__))
+    instance_dir = os.path.join(app_dir, "instance")
+    os.makedirs(instance_dir, exist_ok=True)
+
+    app = Flask(__name__, instance_path=instance_dir, instance_relative_config=True)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
-    database_url = os.environ.get("DATABASE_URL") or f"sqlite:///{db_path}"
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+    database_uri = os.environ.get("DATABASE_URL") or os.environ.get("SQLALCHEMY_DATABASE_URI")
+    if not database_uri:
+        database_uri = f"sqlite:///{os.path.join(instance_dir, 'app.db')}"
 
     app.config.from_mapping(
         SECRET_KEY=os.environ.get("SECRET_KEY", "supersecretkey"),
-        SQLALCHEMY_DATABASE_URI=database_url,
+        SQLALCHEMY_DATABASE_URI=database_uri,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
         PREFERRED_URL_SCHEME='https' if os.environ.get('FLASK_ENV') == 'production' else 'http',
         SESSION_COOKIE_SECURE=os.environ.get('FLASK_ENV') == 'production',
+        PERMANENT_SESSION_LIFETIME=timedelta(days=30),
+        SESSION_REFRESH_EACH_REQUEST=True,
     )
 
     if test_config:
         app.config.update(test_config)
 
-    os.makedirs(app.instance_path, exist_ok=True)
-
-    load_dotenv()
+    app.config.setdefault('SESSION_COOKIE_HTTPONLY', True)
+    app.config.setdefault('SESSION_COOKIE_SAMESITE', 'Lax')
     db.init_app(app)
     migrate.init_app(app, db)
     socketio.init_app(app)
     app.register_blueprint(admin_bp)
+
+    with app.app_context():
+        db.create_all()
 
     # ---------------- HELPERS ----------------
     def get_google_oauth_config():
@@ -88,7 +97,7 @@ def create_app(test_config=None):
     def index():
         if 'username' in session:
             return redirect(url_for('home'))
-        return redirect(url_for('login'))
+        return render_template('index.html')
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -103,9 +112,17 @@ def create_app(test_config=None):
             else:
                 user = User.query.filter_by(username=username).first()
 
-                if user and check_password_hash(user.password, password):
-                    session['username'] = user.username
-                    return redirect(url_for('home'))
+                if user:
+                    password_valid = False
+                    try:
+                        password_valid = check_password_hash(user.password, password)
+                    except (TypeError, ValueError):
+                        password_valid = (user.password == password)
+
+                    if password_valid:
+                        session.permanent = True
+                        session['username'] = user.username
+                        return redirect(url_for('home'))
 
                 error_message = 'Invalid username or password. Please try again.'
 
