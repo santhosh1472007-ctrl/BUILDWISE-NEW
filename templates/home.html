@@ -1,340 +1,568 @@
 ﻿{% extends "base.html" %}
-{% set page_class = "dashboard-page" %}
+{% set page_class = "portfolio-page" %}
 
 {% block content %}
-<section class="dashboard-hero">
-  <div class="heading-group">
-    <h1>Welcome back, {{ username }}</h1>
-    <p>Advanced AI PC Building Platform - Your intelligent companion for creating the perfect system</p>
+<section id="home" class="hero-section" aria-labelledby="hero-title">
+  <div class="hero-copy">
+    <span class="hero-pill">Available for freelance & ambitious product teams</span>
+    <h1 id="hero-title">Santhosh V</h1>
+    <p class="hero-subtitle">Full Stack Python &amp; Flask Developer</p>
+    <p class="hero-description">
+      I build modern, scalable web applications using Python, Flask, PostgreSQL, JavaScript, and AI. I specialize in business websites, admin dashboards, database-driven products, and intelligent web experiences with clean architecture and responsive design.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('home') }}" class="hero-btn hero-btn-primary">Explore BuildWise</a>
+      <a href="#contact" class="hero-btn hero-btn-secondary">Hire Me</a>
+    </div>
+    <div class="hero-highlights">
+      <span>Python</span>
+      <span>Flask</span>
+      <span>PostgreSQL</span>
+      <span>JavaScript</span>
+    </div>
   </div>
 
-  <div class="dashboard-stats">
-    <div class="stat-card">
-      <div class="stat-number">8</div>
-      <div class="stat-label">AI Modules</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">∞</div>
-      <div class="stat-label">Build Possibilities</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number">24/7</div>
-      <div class="stat-label">AI Availability</div>
+  <div class="hero-panel" aria-hidden="true">
+    <div class="hero-panel-card">
+      <div class="hero-panel-head">Crafting premium digital products</div>
+      <div class="hero-panel-list">
+        <div><strong>8+</strong><span>AI-powered modules</span></div>
+        <div><strong>100%</strong><span>responsive builds</span></div>
+        <div><strong>24/7</strong><span>problem-solving mindset</span></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="dashboard-modules">
-  <h2>AI Build Modules</h2>
-  <div class="module-grid">
-    <a href="{{ url_for('pcbuilder') }}" class="module-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        PC Builder Chat
-      </div>
-      <div class="module-status">Interactive AI Assistant</div>
-      <div class="module-description">Get real-time PC building advice with our intelligent chat system. Supports beginner and expert modes.</div>
-    </a>
+<section id="services" class="content-section">
+  <div class="section-heading">
+    <span class="section-kicker">Services</span>
+    <h2>Premium build services for founders and growing teams</h2>
+    <p>From high-converting landing pages to robust admin systems, I deliver polished products that feel effortless to use and easy to scale.</p>
+  </div>
 
-    <a href="{{ url_for('voice_interaction') }}" class="module-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        Voice Interaction
-      </div>
-      <div class="module-status">Speech-to-Text AI</div>
-      <div class="module-description">Speak naturally to get PC building guidance. Powered by Claude AI with text-to-speech responses.</div>
-    </a>
-
-    <a href="{{ url_for('reverse_builder') }}" class="module-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        Use Case Planner
-      </div>
-      <div class="module-status">AI-Powered Builds</div>
-      <div class="module-description">Get complete PC builds tailored to your specific use case - gaming, content creation, or productivity.</div>
-    </a>
-
-    <a href="{{ url_for('bottleneck_predictor') }}" class="module-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        Bottleneck Predictor
-      </div>
-      <div class="module-status">Performance Analysis</div>
-      <div class="module-description">Analyze your PC components for bottlenecks and optimization recommendations in real-time.</div>
-    </a>
-
-    <a href="{{ url_for('upgrade_planner') }}" class="module-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        Upgrade Planner
-      </div>
-      <div class="module-status">3-Phase Roadmap</div>
-      <div class="module-description">Strategic upgrade planning with phased recommendations for maximum performance gains.</div>
-    </a>
-
-    <a href="{{ url_for('three_d_builder') }}" class="module-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        3D Builder
-      </div>
-      <div class="module-status">Visual PC Design</div>
-      <div class="module-description">Interactive 3D visualization of your PC build with component placement and airflow analysis.</div>
-    </a>
-
-    <a href="{{ url_for('purchase_integration') }}" class="module-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        Purchase Integration
-      </div>
-      <div class="module-status">Direct Buy Links</div>
-      <div class="module-description">Generate optimized builds with real-time pricing and direct search links from top retailers.</div>
-    </a>
-    <a href="{{ url_for('auto_order_execution') }}" class="module-card pro-card">
-      <div class="module-title">
-        <span class="status-indicator online"></span>
-        Auto Order Execution
-        <span class="pro-badge">PRO</span>
-      </div>
-      <div class="module-status">Automated Pipeline</div>
-      <div class="module-description">Automated order placement pipeline with verification, approval, stock checks, payment processing, and confirmations.</div>
-    </a>  </div>
+  <div class="service-grid">
+    <article class="service-card">
+      <h3>Custom Flask Websites</h3>
+      <p>Fast, SEO-friendly web experiences tailored to your product or brand.</p>
+    </article>
+    <article class="service-card">
+      <h3>AI Web Applications</h3>
+      <p>Smart workflows, intelligent assistants, and interactive product experiences.</p>
+    </article>
+    <article class="service-card">
+      <h3>Admin Dashboards</h3>
+      <p>Clean internal tools with strong UX, permissions, and real-time data flows.</p>
+    </article>
+    <article class="service-card">
+      <h3>PostgreSQL Integration</h3>
+      <p>Reliable database design and backend logic for scalable apps.</p>
+    </article>
+    <article class="service-card">
+      <h3>REST API Development</h3>
+      <p>Secure, maintainable endpoints for web and mobile products.</p>
+    </article>
+    <article class="service-card">
+      <h3>Responsive Frontend Development</h3>
+      <p>Polished interfaces that look modern on desktop, tablet, and mobile.</p>
+    </article>
+  </div>
 </section>
 
-<section class="dashboard-features">
-  <h2>Platform Features</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <h3>🤖 Advanced AI</h3>
-      <p>Powered by Claude AI and GPT models for intelligent PC building guidance</p>
+<section id="projects" class="content-section">
+  <div class="section-heading">
+    <span class="section-kicker">Featured Project</span>
+    <h2>BuildWise — AI Powered PC Builder</h2>
+    <p>A flagship product experience combining AI guidance, data-backed recommendations, and a premium dashboard-driven workflow.</p>
+  </div>
+
+  <div class="project-shell">
+    <article class="project-showcase">
+      <div class="project-badges">
+        <span>Python</span><span>Flask</span><span>PostgreSQL</span><span>SQLAlchemy</span><span>Bootstrap</span><span>JavaScript</span>
+      </div>
+      <h3>BuildWise</h3>
+      <p>BuildWise brings together conversational AI, reverse planning, upgrade forecasting, and purchase-ready flows into one polished decision-making platform for PC builders.</p>
+      <div class="feature-list">
+        <div class="feature-item">AI Chatbot</div>
+        <div class="feature-item">Reverse Builder</div>
+        <div class="feature-item">Upgrade Planner</div>
+        <div class="feature-item">Bottleneck Predictor</div>
+        <div class="feature-item">User Authentication</div>
+        <div class="feature-item">Purchase Integration</div>
+      </div>
+      <div class="project-actions">
+        <a href="https://github.com/santhosh1472007-ctrl" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="{{ url_for('home') }}" class="secondary">Explore BuildWise</a>
+      </div>
+    </article>
+
+    <div class="project-links">
+      <a href="{{ url_for('pcbuilder') }}" class="project-link-card">
+        <strong>PC Builder Chat</strong>
+        <span>Interactive AI assistant</span>
+      </a>
+      <a href="{{ url_for('reverse_builder') }}" class="project-link-card">
+        <strong>Reverse Builder</strong>
+        <span>Use-case specific planning</span>
+      </a>
+      <a href="{{ url_for('upgrade_planner') }}" class="project-link-card">
+        <strong>Upgrade Planner</strong>
+        <span>Strategic roadmap flow</span>
+      </a>
+      <a href="{{ url_for('bottleneck_predictor') }}" class="project-link-card">
+        <strong>Bottleneck Predictor</strong>
+        <span>Performance diagnostics</span>
+      </a>
     </div>
-    <div class="feature-card">
-      <h3>🎤 Voice Control</h3>
-      <p>Natural speech interaction with Web Speech API and text-to-speech responses</p>
+  </div>
+</section>
+
+<section id="skills" class="content-section">
+  <div class="section-heading">
+    <span class="section-kicker">Skills</span>
+    <h2>Technologies I use to build and ship with confidence</h2>
+  </div>
+
+  <div class="skill-grid">
+    <div class="skill-pill">Python</div>
+    <div class="skill-pill">Flask</div>
+    <div class="skill-pill">PostgreSQL</div>
+    <div class="skill-pill">SQLAlchemy</div>
+    <div class="skill-pill">HTML</div>
+    <div class="skill-pill">CSS</div>
+    <div class="skill-pill">JavaScript</div>
+    <div class="skill-pill">Bootstrap</div>
+    <div class="skill-pill">Git</div>
+    <div class="skill-pill">REST APIs</div>
+  </div>
+</section>
+
+<section id="about" class="content-section about-section">
+  <div class="about-card">
+    <span class="section-kicker">About</span>
+    <h2>Building thoughtful software with a strong product mindset</h2>
+    <p>I am an aspiring software developer passionate about building scalable web applications and AI-powered solutions using Python and Flask. I enjoy solving real-world problems through modern web technologies and continuously improving my development skills.</p>
+    <div class="about-meta">
+      <div>
+        <strong>Name</strong>
+        <span>Santhosh V</span>
+      </div>
+      <div>
+        <strong>Student</strong>
+        <span>Sathyabama Institute of Science &amp; Technology</span>
+      </div>
     </div>
-    <div class="feature-card">
-      <h3>🔍 Real-time Analysis</h3>
-      <p>Instant compatibility checking and bottleneck prediction</p>
-    </div>
-    <div class="feature-card">
-      <h3>📊 Performance Metrics</h3>
-      <p>Detailed performance analysis and optimization recommendations</p>
-    </div>
-    <div class="feature-card">
-      <h3>🎯 Use Case Optimization</h3>
-      <p>Tailored builds for gaming, content creation, and professional workloads</p>
-    </div>
-    <div class="feature-card">
-      <h3>📱 Responsive Design</h3>
-      <p>Optimized for all devices with modern dark UI and smooth animations</p>
-    </div>
+  </div>
+</section>
+
+<section id="contact" class="content-section">
+  <div class="section-heading">
+    <span class="section-kicker">Contact</span>
+    <h2>Let’s build something valuable together</h2>
+    <p>If you need a dependable developer for a modern web product, I’d love to hear about your project.</p>
+  </div>
+
+  <div class="contact-grid">
+    <a class="contact-card" href="mailto:santhosh1472007@gmail.com">
+      <strong>Email</strong>
+      <span>santhosh1472007@gmail.com</span>
+    </a>
+    <a class="contact-card" href="https://github.com/santhosh1472007-ctrl" target="_blank" rel="noopener noreferrer">
+      <strong>GitHub</strong>
+      <span>santhosh1472007-ctrl</span>
+    </a>
+    <a class="contact-card" href="https://www.linkedin.com/in/santhosh-v" target="_blank" rel="noopener noreferrer">
+      <strong>LinkedIn</strong>
+      <span>Santhosh V</span>
+    </a>
   </div>
 </section>
 
 <style>
-.dashboard-hero {
-  text-align: center;
-  margin-bottom: 3rem;
-  padding: 2rem 0 1rem;
+.hero-section {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 2.25rem;
+  align-items: center;
+  padding: 2rem 0 3rem;
 }
 
-.dashboard-hero h1 {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.hero-copy h1 {
+  font-size: clamp(2.6rem, 5vw, 4.4rem);
+  margin-bottom: 0.6rem;
+}
+
+.hero-pill,
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(94, 231, 255, 0.1);
+  color: var(--accent-primary);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid rgba(94, 231, 255, 0.24);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2vw, 1.45rem);
+  color: var(--text-secondary);
+  font-weight: 600;
   margin-bottom: 1rem;
 }
 
-.dashboard-stats {
+.hero-description {
+  max-width: 680px;
+  font-size: 1.02rem;
+  margin-bottom: 1.4rem;
+}
+
+.hero-actions {
   display: flex;
-  justify-content: center;
-  gap: 1.25rem;
-  margin: 2rem 0;
   flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
-.stat-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-xl);
-  padding: 1.5rem;
-  text-align: center;
-  min-width: 140px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-md);
-}
-
-.stat-card:hover {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-2px);
-}
-
-.stat-number {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--accent-primary);
-  margin-bottom: 0.5rem;
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.dashboard-modules h2,
-.dashboard-features h2 {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: var(--accent-primary);
-}
-
-.module-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
-}
-
-.module-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-xl);
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  position: relative;
-  overflow: hidden;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-md);
-}
-
-.module-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gradient-primary);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.module-card:hover::before {
-  opacity: 1;
-}
-
-.module-card:hover {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-glow);
-  transform: translateY(-4px);
-}
-
-.module-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--accent-primary);
-  margin-bottom: 0.5rem;
-  display: flex;
+.hero-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0.9rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.pro-badge {
+.hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.hero-btn-primary {
   background: var(--gradient-primary);
   color: white;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 6px 20px rgba(94, 231, 255, 0.25);
 }
 
-.pro-card {
-  border: 1px solid rgba(94, 231, 255, 0.4);
-  background: linear-gradient(135deg, rgba(94, 231, 255, 0.08), rgba(139, 92, 246, 0.08));
-}
-
-.pro-card:hover {
-  border-color: var(--accent-secondary);
-  box-shadow: var(--shadow-glow);
-}
-
-.module-status {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.module-description {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.feature-card {
-  background: var(--bg-card);
+.hero-btn-secondary {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-primary);
-  border-radius: var(--radius-xl);
-  padding: 1.5rem;
-  text-align: center;
-  transition: all 0.3s ease;
+}
+
+.hero-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hero-highlights span {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+}
+
+.hero-panel {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-panel-card {
+  width: min(100%, 420px);
+  padding: 1.2rem;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), var(--shadow-md);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.hero-panel-head {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.hero-panel-list {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.hero-panel-list > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 0.9rem;
+  border-radius: 0.9rem;
+  background: rgba(4, 8, 22, 0.65);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.hero-panel-list strong {
+  color: var(--accent-primary);
+}
+
+.hero-panel-list span {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.content-section {
+  padding: 2.2rem 0 2.8rem;
+}
+
+.section-heading {
+  max-width: 700px;
+  margin-bottom: 1.5rem;
+}
+
+.section-heading h2 {
+  margin: 0.7rem 0 0.45rem;
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+}
+
+.section-heading p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.service-card,
+.project-showcase,
+.about-card,
+.contact-card,
+.project-link-card {
+  border: 1px solid var(--border-primary);
+  border-radius: 1.1rem;
+  background: linear-gradient(135deg, rgba(11,18,40,0.88), rgba(11,18,40,0.64));
+  box-shadow: var(--shadow-md);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: var(--shadow-md);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.feature-card:hover {
-  border-color: var(--accent-primary);
+.service-card {
+  padding: 1.2rem;
+}
+
+.service-card:hover,
+.project-link-card:hover,
+.contact-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(94, 231, 255, 0.38);
   box-shadow: var(--shadow-glow);
-  transform: translateY(-2px);
 }
 
-.feature-card h3 {
+.service-card h3,
+.project-showcase h3 {
   color: var(--accent-primary);
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
-.feature-card p {
+.service-card p,
+.project-showcase p,
+.about-card p {
   color: var(--text-secondary);
-  line-height: 1.5;
+  margin-bottom: 0;
 }
 
-@media (max-width: 768px) {
-  .dashboard-stats {
-    flex-direction: column;
-    align-items: center;
-  }
+.project-shell {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.2rem;
+  align-items: start;
+}
 
-  .module-grid,
-  .features-grid {
+.project-showcase {
+  padding: 1.3rem;
+}
+
+.project-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 0.9rem;
+}
+
+.project-badges span,
+.feature-item,
+.skill-pill {
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.feature-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 1rem 0 1.2rem;
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.project-actions a {
+  text-decoration: none;
+  color: var(--text-primary);
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  background: var(--gradient-primary);
+  font-weight: 600;
+}
+
+.project-actions a.secondary {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-primary);
+}
+
+.project-links {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.project-link-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-link-card strong {
+  color: var(--accent-primary);
+}
+
+.project-link-card span {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.skill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.skill-pill {
+  animation: floatUp 0.7s ease both;
+}
+
+.about-card {
+  padding: 1.35rem;
+}
+
+.about-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.about-meta strong {
+  display: block;
+  color: var(--accent-primary);
+  margin-bottom: 0.25rem;
+}
+
+.about-meta span {
+  color: var(--text-secondary);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.15rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.contact-card strong {
+  color: var(--accent-primary);
+}
+
+.contact-card span {
+  color: var(--text-secondary);
+}
+
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-section,
+  .project-shell {
     grid-template-columns: 1fr;
   }
 
-  .stat-card {
+  .hero-panel {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 1.2rem;
+  }
+
+  .hero-actions,
+  .project-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-btn,
+  .project-actions a {
     width: 100%;
-    max-width: 300px;
+  }
+
+  .hero-highlights {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
 </style>

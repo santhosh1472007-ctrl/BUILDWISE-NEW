@@ -1,8 +1,9 @@
 import os
 import difflib
 import re
+import secrets
 from datetime import timedelta
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, urlsplit, urlunsplit
 import openai
 import anthropic
 import requests
@@ -22,9 +23,10 @@ socketio = SocketIO()
 
 
 def create_app(test_config=None):
-    load_dotenv()
-
     app_dir = os.path.abspath(os.path.dirname(__file__))
+    # Load environment variables from the project root explicitly so OAuth settings are read
+    # reliably regardless of the current working directory when Flask starts.
+    load_dotenv(os.path.join(app_dir, '.env'))
     instance_dir = os.path.join(app_dir, "instance")
     os.makedirs(instance_dir, exist_ok=True)
 
@@ -39,11 +41,21 @@ def create_app(test_config=None):
         SECRET_KEY=os.environ.get("SECRET_KEY", "supersecretkey"),
         SQLALCHEMY_DATABASE_URI=database_uri,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        # OAuth should use the active request host by default so localhost and deployed hosts
+        # both resolve to the correct callback URL without hard-coding a hostname.
         PREFERRED_URL_SCHEME='https' if os.environ.get('FLASK_ENV') == 'production' else 'http',
+        # SESSION_COOKIE_SECURE must be enabled only when the app is served over HTTPS.
         SESSION_COOKIE_SECURE=os.environ.get('FLASK_ENV') == 'production',
         PERMANENT_SESSION_LIFETIME=timedelta(days=30),
         SESSION_REFRESH_EACH_REQUEST=True,
     )
+
+    # SERVER_NAME is intentionally left unset by default. Using the active request host
+    # avoids localhost/127.0.0.1 mismatches and makes the redirect URI accurate for both
+    # local development and production deployments.
+    configured_server_name = os.environ.get("SERVER_NAME", "").strip()
+    if configured_server_name:
+        app.config["SERVER_NAME"] = configured_server_name
 
     if test_config:
         app.config.update(test_config)
@@ -59,21 +71,47 @@ def create_app(test_config=None):
         db.create_all()
 
     # ---------------- HELPERS ----------------
+    def _looks_like_placeholder(value):
+        normalized = (value or '').strip().lower()
+        placeholder_markers = ('your_google', 'your-', 'your_', 'example', 'placeholder', 'changeme', 'onrender')
+        return any(marker in normalized for marker in placeholder_markers)
+
+    def normalize_google_redirect_uri(redirect_uri):
+        parsed = urlsplit(redirect_uri)
+        if parsed.scheme not in {'http', 'https'} or not parsed.netloc:
+            raise ValueError('GOOGLE_REDIRECT_URI must be an absolute http(s) URL.')
+        path = parsed.path.rstrip('/') or '/'
+        return urlunsplit((parsed.scheme, parsed.netloc, path, '', ''))
+
     def get_google_oauth_config():
+        # Load Google OAuth settings from environment variables so the app can be configured
+        # per environment without changing the source code.
         client_id = os.environ.get('GOOGLE_CLIENT_ID', '').strip()
         client_secret = os.environ.get('GOOGLE_CLIENT_SECRET', '').strip()
         redirect_uri = os.environ.get('GOOGLE_REDIRECT_URI', '').strip()
         return client_id, client_secret, redirect_uri
 
     def is_google_oauth_configured():
+        # Treat the OAuth flow as configured only when both credentials are present and not
+        # placeholder values. The redirect URI is handled separately so it can be derived
+        # dynamically from the active request host.
         client_id, client_secret, _ = get_google_oauth_config()
-        return bool(client_id and client_secret and 'your_google' not in client_id and 'your_google' not in client_secret)
+        return bool(
+            client_id
+            and client_secret
+            and not _looks_like_placeholder(client_id)
+            and not _looks_like_placeholder(client_secret)
+        )
 
     def get_google_redirect_uri():
-        configured_redirect_uri = os.environ.get('GOOGLE_REDIRECT_URI', '').strip()
-        if configured_redirect_uri and 'your_google' not in configured_redirect_uri:
-            return configured_redirect_uri
-        return url_for('google_callback', _external=True)
+        # Prefer an explicit redirect URI only when it is a real, non-placeholder value.
+        # Otherwise, derive the callback URI from the active request host using Flask's route
+        # generation so the callback path stays aligned with the registered route name.
+        configured_redirect_uri = get_google_oauth_config()[2]
+        if configured_redirect_uri and not _looks_like_placeholder(configured_redirect_uri):
+            return normalize_google_redirect_uri(configured_redirect_uri)
+
+        return normalize_google_redirect_uri(url_for('google_callback', _external=True))
 
     def get_unique_username(base_name):
         base = re.sub(r'[^A-Za-z0-9_.-]+', '', (base_name or 'user').strip()) or 'user'
@@ -97,7 +135,11 @@ def create_app(test_config=None):
     def index():
         if 'username' in session:
             return redirect(url_for('home'))
-        return render_template('index.html')
+        return render_template('home.html')
+
+    @app.route('/portfolio')
+    def portfolio():
+        return render_template('home.html')
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -171,6 +213,10 @@ def create_app(test_config=None):
         client_id, _, _ = get_google_oauth_config()
 
         redirect_uri = get_google_redirect_uri()
+        # Use a per-request state token so the callback can verify the login originated from
+        # this session and reject forged or replayed OAuth responses.
+        state = secrets.token_urlsafe(24)
+        session['oauth_state'] = state
         params = {
             'client_id': client_id,
             'redirect_uri': redirect_uri,
@@ -178,6 +224,7 @@ def create_app(test_config=None):
             'scope': 'openid email profile',
             'access_type': 'online',
             'prompt': 'select_account',
+            'state': state,
         }
         auth_url = f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
         return redirect(auth_url)
@@ -191,6 +238,11 @@ def create_app(test_config=None):
         code = request.args.get('code')
         if not code:
             return redirect(url_for('login'))
+
+        state = request.args.get('state', '')
+        expected_state = session.pop('oauth_state', '')
+        if not state or state != expected_state:
+            return redirect(url_for('login', oauth_error='Google login was rejected because the session state was invalid.'))
 
         if not is_google_oauth_configured():
             return redirect(url_for('login', oauth_error='Google sign-in is not configured yet. Add your real Google OAuth client ID and secret to enable this option.'))
@@ -245,7 +297,7 @@ def create_app(test_config=None):
     def home():
         if 'username' not in session:
             return redirect(url_for('login'))
-        return render_template('home.html', username=session['username'])
+        return render_template('index.html', username=session['username'])
 
     @app.route('/logout')
     def logout():
