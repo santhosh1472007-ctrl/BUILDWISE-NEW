@@ -1,0 +1,197 @@
+🌬 Air Cooler Brands
+
+Noctua
+
+Noctua NH-D15 G2
+Noctua NH-D15
+Noctua NH-D15S
+Noctua NH-U12A
+Noctua NH-U12S Redux
+Noctua NH-U14S
+Noctua NH-L12S
+Noctua NH-L9i
+Noctua NH-L9a
+
+DeepCool
+
+DeepCool AK400
+DeepCool AK500
+DeepCool AK620
+DeepCool Assassin IV
+DeepCool Assassin IV VC Vision
+DeepCool AG400
+DeepCool AG620
+
+Cooler Master
+
+Cooler Master Hyper 212 Black
+Cooler Master Hyper 212 Halo
+Cooler Master Hyper 622 Halo
+Cooler Master MA624 Stealth
+Cooler Master MasterAir MA824 Stealth
+
+be quiet!
+
+be quiet! Pure Rock 2
+be quiet! Pure Rock 3
+be quiet! Shadow Rock 3
+be quiet! Dark Rock 4
+be quiet! Dark Rock Pro 4
+be quiet! Dark Rock Elite
+
+Thermalright
+
+Thermalright Peerless Assassin 120 SE
+Thermalright Phantom Spirit 120 SE
+Thermalright Frost Commander 140
+Thermalright Assassin King 120
+Thermalright Silver Soul 135
+
+Scythe
+
+Scythe Fuma 3
+Scythe Mugen 6
+Scythe Kotetsu Mark III
+
+ID-COOLING
+
+ID-COOLING SE-214-XT
+ID-COOLING SE-224-XTS
+ID-COOLING SE-226-XT
+ID-COOLING Frozn A620
+
+Arctic
+
+Arctic Freezer 36
+Arctic Freezer 34 eSports Duo
+Arctic Freezer A35
+Arctic Alpine 23
+💧 AIO Liquid Coolers
+
+Corsair
+
+Corsair H100 RGB
+Corsair H100i Elite
+Corsair H115i Elite
+Corsair H150i Elite LCD
+Corsair iCUE LINK H150i RGB
+Corsair iCUE LINK H170i RGB
+
+NZXT
+
+NZXT Kraken 240
+NZXT Kraken 280
+NZXT Kraken 360
+NZXT Kraken Elite 240
+NZXT Kraken Elite 360
+
+Lian Li
+
+Lian Li Galahad II Trinity
+Lian Li Galahad II LCD
+Lian Li HydroShift LCD 360
+DeepCool
+
+DeepCool LS520
+DeepCool LS720
+DeepCool LT520
+DeepCool LT720
+DeepCool Mystique 360
+
+Cooler Master
+
+Cooler Master MasterLiquid ML240L
+Cooler Master MasterLiquid ML360L
+Cooler Master Atmos 240
+Cooler Master Atmos 360
+Arctic
+
+Arctic Liquid Freezer III 240
+Arctic Liquid Freezer III 280
+Arctic Liquid Freezer III 360
+Arctic Liquid Freezer III 420
+ASUS
+
+ASUS ROG Ryujin III 360
+ASUS ROG Ryuo III 360
+ASUS TUF Gaming LC II 240
+ASUS TUF Gaming LC II 360
+
+MSI
+
+MSI MAG CoreLiquid E240
+MSI MAG CoreLiquid E360
+MSI MEG CoreLiquid S360
+Thermaltake
+
+Thermaltake TH240
+Thermaltake TH360
+Thermaltake TOUGHLIQUID Ultra 360
+
+📏 Radiator Sizes
+120mm
+
+140mm
+
+240mm
+
+280mm
+
+360mm
+
+420mm
+
+🌬 Fan Sizes
+
+92mm
+
+120mm
+
+135mm
+
+140mm
+
+🖥 Supported Sockets
+
+AMD
+AM4
+
+AM5
+
+Intel
+
+LGA1200
+
+LGA1700
+
+LGA1851
+
+🔥 Recommended TDP Ratings
+65W
+
+95W
+
+105W
+
+125W
+
+170W
+
+220W
+
+250W
+
+300W+
+
+🌈 RGB Options
+RGB
+
+ARGB
+
+No RGB
+
+🧊 Cooler Types
+
+Air Cooler
+
+AIO Liquid Cooler

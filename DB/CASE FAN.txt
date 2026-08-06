@@ -1,0 +1,158 @@
+🌪️ Noctua
+
+Noctua NF-A12x25 PWM
+Noctua NF-A14 PWM
+Noctua NF-F12 PWM
+Noctua NF-S12A PWM
+Noctua NF-A9 PWM
+Noctua NF-A8 PWM
+Noctua NF-P12 Redux
+Noctua NF-P14 Redux
+
+🌪️ Corsair
+
+Corsair AF120 RGB Elite
+Corsair AF140 RGB Elite
+Corsair SP120 RGB Elite
+Corsair SP140 RGB Elite
+Corsair LL120 RGB
+Corsair LL140 RGB
+Corsair QL120 RGB
+Corsair QL140 RGB
+Corsair iCUE LINK RX120 RGB
+Corsair iCUE LINK RX140 RGB
+Corsair RS120 ARGB
+Corsair RS140 ARGB
+
+🌪️ Lian Li
+
+Lian Li UNI FAN SL120 V2
+Lian Li UNI FAN SL140 V2
+Lian Li UNI FAN AL120 V2
+Lian Li UNI FAN AL140 V2
+Lian Li UNI FAN TL LCD 120
+Lian Li UNI FAN TL LCD 140
+Lian Li UNI FAN P28
+
+🌪️ NZXT
+
+NZXT F120 RGB Core
+NZXT F140 RGB Core
+NZXT F120Q
+NZXT F140Q
+NZXT F120 RGB Duo
+NZXT F140 RGB Duo
+
+🌪️ be quiet!
+
+be quiet! Pure Wings 2 120mm
+be quiet! Pure Wings 3 120mm
+be quiet! Pure Wings 3 140mm
+be quiet! Silent Wings 4 120mm
+be quiet! Silent Wings Pro 4 120mm
+be quiet! Silent Wings Pro 4 140mm
+
+🌪️ Arctic
+
+Arctic P12 PWM PST
+Arctic P14 PWM PST
+Arctic F12 PWM
+Arctic F14 PWM
+Arctic P12 Max
+Arctic P14 Max
+Arctic BioniX P120
+Arctic BioniX P140
+
+🌪️ Cooler Master
+
+Cooler Master SickleFlow 120 ARGB
+Cooler Master SickleFlow 140 ARGB
+Cooler Master Mobius 120
+Cooler Master Mobius 140
+Cooler Master MasterFan MF120 Halo
+Cooler Master MasterFan MF140 Halo
+
+🌪️ DeepCool
+
+DeepCool FK120
+DeepCool FK140
+DeepCool FC120 ARGB
+DeepCool CF120 Plus
+DeepCool FT14
+
+🌪️ Thermaltake
+
+Thermaltake ToughFan 12
+Thermaltake ToughFan 14
+Thermaltake SWAFAN EX12 RGB
+Thermaltake SWAFAN EX14 RGB
+Thermaltake CT120 ARGB
+Thermaltake CT140 ARGB
+🌪️ Phanteks
+
+Phanteks M25 120 D-RGB
+Phanteks M25 140 D-RGB
+Phanteks D30 120
+Phanteks D30 140
+Phanteks T30 120
+
+🌪️ ASUS
+
+ASUS TUF TF120 ARGB
+ASUS ROG XF120
+ASUS ROG STRIX XF120
+
+🌪️ MSI
+
+MSI Silent Gale P12
+MSI MPG F120 ARGB
+MSI MPG F140 ARGB
+
+🌪️ SilverStone
+
+SilverStone Air Blazer 120RW
+SilverStone Shark Force 140
+SilverStone Air Penetrator 184i
+
+🌪️ Antec
+
+Antec Storm T3
+Antec Fusion 120 ARGB
+Antec Tranquil 120
+
+🌪️ Fan Sizes
+
+80mm
+92mm
+120mm
+140mm
+180mm
+200mm
+
+🌈 Lighting
+
+No RGB
+RGB
+ARGB
+Infinity Mirror RGB
+
+LCD Display
+⚙️ Bearing Types
+Sleeve Bearing
+Hydraulic Bearing
+Rifle Bearing
+Fluid Dynamic Bearing (FDB)
+Magnetic Bearing
+Dual Ball Bearing
+
+🔌 Connector Types
+
+3-pin DC
+4-pin PWM
+ARGB 3-pin (5V)
+RGB 4-pin (12V)
+
+💨 Airflow Types
+Airflow Fan
+Static Pressure Fan
+Hybrid Fan

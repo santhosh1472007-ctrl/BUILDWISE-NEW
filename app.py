@@ -15,11 +15,305 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_socketio import SocketIO, emit
 from admin_routes import admin_bp
-from models import db, User
+from models import (
+    db,
+    User,
+    CPU,
+    GPU,
+    Motherboard,
+    RamKit,
+    SSD,
+    PSU,
+    CpuCooler,
+    PCCase,
+    CaseFan,
+    Brand,
+    CpuSocket,
+    Chipset,
+)
+from sqlalchemy import inspect, text
 
 # ---------------- APP SETUP ----------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PLACEHOLDER_IMAGE_PATH = "/static/images/placeholder.svg"
 migrate = Migrate()
 socketio = SocketIO()
+
+
+def resolve_component_image_path(image_path):
+    if not image_path:
+        return PLACEHOLDER_IMAGE_PATH
+
+    image_path = str(image_path).strip()
+    if not image_path:
+        return PLACEHOLDER_IMAGE_PATH
+    if image_path.startswith(("http://", "https://")):
+        return image_path
+
+    candidates = []
+    if image_path.startswith("/"):
+        candidates.append(os.path.join(BASE_DIR, image_path.lstrip("/")))
+        candidates.append(os.path.join(BASE_DIR, "static", image_path.lstrip("/")))
+    else:
+        candidates.append(os.path.join(BASE_DIR, image_path))
+        candidates.append(os.path.join(BASE_DIR, "static", image_path))
+        candidates.append(os.path.join(BASE_DIR, image_path.replace("\\", "/")))
+
+    for candidate in candidates:
+        if os.path.isfile(candidate):
+            return "/" + os.path.relpath(candidate, BASE_DIR).replace("\\", "/")
+
+    return PLACEHOLDER_IMAGE_PATH
+
+
+def ensure_database_schema(app):
+    with app.app_context():
+        inspector = inspect(db.engine)
+        if not inspector.has_table("cpus"):
+            db.create_all()
+            return
+
+        dialect_name = db.engine.dialect.name
+        if dialect_name == "postgresql":
+            timestamp_type = "TIMESTAMP WITH TIME ZONE"
+        else:
+            timestamp_type = "DATETIME"
+
+        column_type_map = {
+            "cpus": {
+                "brand": "VARCHAR(10)",
+                "socket_id": "INTEGER",
+                "architecture": "VARCHAR(60)",
+                "series": "VARCHAR(60)",
+                "cores": "SMALLINT",
+                "threads": "SMALLINT",
+                "base_clock_ghz": "NUMERIC(4, 2)",
+                "boost_clock_ghz": "NUMERIC(4, 2)",
+                "tdp_watts": "SMALLINT",
+                "max_tdp_watts": "SMALLINT",
+                "memory_type": "VARCHAR(10)",
+                "max_memory_speed_mhz": "INTEGER",
+                "memory_channels": "SMALLINT",
+                "pcie_gen": "SMALLINT",
+                "integrated_graphics": "BOOLEAN",
+                "igpu_model": "VARCHAR(80)",
+                "igpu_cores": "SMALLINT",
+                "cooler_included": "VARCHAR(80)",
+                "has_unlocked_multiplier": "BOOLEAN",
+                "lithography_nm": "SMALLINT",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "gpus": {
+                "brand": "VARCHAR(10)",
+                "architecture": "VARCHAR(60)",
+                "series": "VARCHAR(60)",
+                "vram_gb": "SMALLINT",
+                "vram_type": "VARCHAR(20)",
+                "bus_width_bits": "SMALLINT",
+                "base_clock_mhz": "INTEGER",
+                "boost_clock_mhz": "INTEGER",
+                "game_clock_mhz": "INTEGER",
+                "tflops_fp32": "NUMERIC(10, 2)",
+                "shaders": "INTEGER",
+                "compute_units": "SMALLINT",
+                "rt_cores": "SMALLINT",
+                "tensor_cores": "SMALLINT",
+                "ray_accelerators": "SMALLINT",
+                "ai_accelerators": "SMALLINT",
+                "infinity_cache_mb": "SMALLINT",
+                "tdp_watts": "SMALLINT",
+                "min_psu_watts": "SMALLINT",
+                "power_connectors": "VARCHAR(100)",
+                "card_length_mm": "SMALLINT",
+                "card_height_mm": "SMALLINT",
+                "card_slots": "NUMERIC(4, 2)",
+                "pcie_interface": "VARCHAR(20)",
+                "ray_tracing": "BOOLEAN",
+                "dlss_version": "VARCHAR(20)",
+                "fsr_version": "VARCHAR(20)",
+                "has_12vhpwr": "BOOLEAN",
+                "display_outputs": "VARCHAR(150)",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "motherboards": {
+                "brand_id": "INTEGER",
+                "socket_id": "INTEGER",
+                "chipset_id": "INTEGER",
+                "form_factor": "VARCHAR(20)",
+                "memory_type": "VARCHAR(10)",
+                "memory_slots": "SMALLINT",
+                "max_memory_gb": "SMALLINT",
+                "max_memory_speed_mhz": "INTEGER",
+                "pcie_x16_slots": "SMALLINT",
+                "pcie_x1_slots": "SMALLINT",
+                "m2_slots": "SMALLINT",
+                "m2_pcie_gen_slots": "VARCHAR(30)",
+                "sata_ports": "SMALLINT",
+                "usb_c_rear_ports": "SMALLINT",
+                "wifi": "BOOLEAN",
+                "wifi_standard": "VARCHAR(20)",
+                "bluetooth": "BOOLEAN",
+                "bluetooth_version": "VARCHAR(10)",
+                "vrm_phases": "SMALLINT",
+                "bios_flashback": "BOOLEAN",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "ram_kits": {
+                "brand_id": "INTEGER",
+                "memory_type": "VARCHAR(10)",
+                "speed_mhz": "INTEGER",
+                "capacity_gb": "SMALLINT",
+                "module_count": "SMALLINT",
+                "capacity_per_module_gb": "SMALLINT",
+                "latency_cl": "SMALLINT",
+                "voltage": "NUMERIC(4, 3)",
+                "rgb": "BOOLEAN",
+                "form_factor": "VARCHAR(10)",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "ssds": {
+                "brand_id": "INTEGER",
+                "interface": "VARCHAR(30)",
+                "form_factor": "VARCHAR(20)",
+                "capacity_gb": "INTEGER",
+                "nand_type": "VARCHAR(10)",
+                "seq_read_mbps": "INTEGER",
+                "seq_write_mbps": "INTEGER",
+                "tbw": "INTEGER",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "psus": {
+                "brand_id": "INTEGER",
+                "wattage": "SMALLINT",
+                "efficiency_rating": "VARCHAR(20)",
+                "modular_type": "VARCHAR(20)",
+                "form_factor": "VARCHAR(10)",
+                "has_12vhpwr": "BOOLEAN",
+                "has_12v2x6": "BOOLEAN",
+                "pcie_6pin_count": "SMALLINT",
+                "pcie_8pin_count": "SMALLINT",
+                "eps_8pin_count": "SMALLINT",
+                "sata_connectors": "SMALLINT",
+                "atx_connector": "BOOLEAN",
+                "fan_size_mm": "SMALLINT",
+                "fanless": "BOOLEAN",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "cpu_coolers": {
+                "brand_id": "INTEGER",
+                "cooler_type": "VARCHAR(10)",
+                "height_mm": "SMALLINT",
+                "radiator_size_mm": "SMALLINT",
+                "tdp_rating_watts": "SMALLINT",
+                "fan_size_mm": "SMALLINT",
+                "fan_count": "SMALLINT",
+                "rgb": "BOOLEAN",
+                "rgb_type": "VARCHAR(10)",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "pc_cases": {
+                "brand_id": "INTEGER",
+                "form_factor": "VARCHAR(30)",
+                "supported_mobo_form_factors": "VARCHAR(100)",
+                "gpu_clearance_mm": "SMALLINT",
+                "cpu_cooler_clearance_mm": "SMALLINT",
+                "max_radiator_front_mm": "SMALLINT",
+                "max_radiator_top_mm": "SMALLINT",
+                "max_radiator_rear_mm": "SMALLINT",
+                "psu_form_factor": "VARCHAR(10)",
+                "drive_bays_35": "SMALLINT",
+                "drive_bays_25": "SMALLINT",
+                "side_panel_type": "VARCHAR(30)",
+                "color": "VARCHAR(30)",
+                "rgb_type": "VARCHAR(10)",
+                "included_fans": "SMALLINT",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+                "created_at": timestamp_type,
+                "updated_at": timestamp_type,
+            },
+            "case_fans": {
+                "brand_id": "INTEGER",
+                "size_mm": "SMALLINT",
+                "bearing_type": "VARCHAR(30)",
+                "connector_type": "VARCHAR(30)",
+                "airflow_type": "VARCHAR(20)",
+                "rgb_type": "VARCHAR(30)",
+                "max_rpm": "SMALLINT",
+                "max_airflow_cfm": "NUMERIC(5, 1)",
+                "max_noise_dba": "NUMERIC(4, 1)",
+                "pack_count": "SMALLINT",
+                "glb_model_path": "VARCHAR(255)",
+                "image_path": "VARCHAR(255)",
+                "msrp_usd": "NUMERIC(8, 2)",
+                "current_price_usd": "NUMERIC(8, 2)",
+                "retailer_url": "VARCHAR(512)",
+                "price_last_updated": timestamp_type,
+            },
+        }
+
+        for table_name, table_columns in column_type_map.items():
+            if not inspector.has_table(table_name):
+                continue
+            existing_columns = {column["name"] for column in inspector.get_columns(table_name)}
+            for column_name, column_type in table_columns.items():
+                if column_name not in existing_columns:
+                    db.session.execute(text(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type}"))
+
+        db.session.commit()
 
 
 def create_app(test_config=None):
@@ -68,9 +362,221 @@ def create_app(test_config=None):
     app.register_blueprint(admin_bp)
 
     with app.app_context():
-        db.create_all()
+        ensure_database_schema(app)
 
     # ---------------- HELPERS ----------------
+    def _catalog_context():
+        # Ensure brand is always a string for template grouping (avoid None causing sort errors)
+        cpus = CPU.query.order_by(CPU.name).all()
+        gpus = GPU.query.order_by(GPU.name).all()
+        motherboards = Motherboard.query.order_by(Motherboard.name).all()
+        ram_kits = RamKit.query.order_by(RamKit.name).all()
+        ssds = SSD.query.order_by(SSD.name).all()
+        psus = PSU.query.order_by(PSU.name).all()
+        cpu_coolers = CpuCooler.query.order_by(CpuCooler.name).all()
+        pc_cases = PCCase.query.order_by(PCCase.name).all()
+        case_fans = CaseFan.query.order_by(CaseFan.name).all()
+
+        # Normalize brand fields that may be NULL in the database to avoid Jinja sorting errors
+        for item in (cpus + gpus + motherboards + ram_kits + ssds + psus + cpu_coolers + pc_cases + case_fans):
+            try:
+                if getattr(item, 'brand', None) is None:
+                    setattr(item, 'brand', 'Unknown')
+            except Exception:
+                # Some models may not have a 'brand' attribute; ignore those
+                pass
+
+        return {
+            "cpus": cpus,
+            "gpus": gpus,
+            "motherboards": motherboards,
+            "ram_kits": ram_kits,
+            "ssds": ssds,
+            "psus": psus,
+            "cpu_coolers": cpu_coolers,
+            "pc_cases": pc_cases,
+            "case_fans": case_fans,
+            "brands": Brand.query.order_by(Brand.name).all(),
+        }
+
+    def _component_name(component):
+        return getattr(component, "name", None) or "Unknown"
+
+    def _find_component(model, search_text):
+        if not search_text:
+            return None
+        normalized = re.sub(r'[^a-z0-9]+', ' ', (search_text or '').lower()).strip()
+        if not normalized:
+            return None
+        candidates = model.query.all()
+        for component in candidates:
+            candidate_text = re.sub(r'[^a-z0-9]+', ' ', getattr(component, "name", "").lower()).strip()
+            if normalized in candidate_text:
+                return component
+        return candidates[0] if candidates else None
+
+    def _pick_cpu_for_budget(budget_tier, use_case):
+        query = CPU.query
+        if use_case == "editing":
+            query = query.filter(CPU.cores >= 8)
+        elif use_case == "streaming":
+            query = query.filter(CPU.cores >= 8)
+        elif use_case == "gaming":
+            query = query.filter(CPU.cores >= 6)
+
+        if budget_tier == "low":
+            query = query.filter(CPU.tdp_watts <= 95)
+        elif budget_tier == "high":
+            query = query.filter(CPU.cores >= 12)
+        return query.order_by(CPU.current_price_usd.asc().nullslast(), CPU.boost_clock_ghz.desc(), CPU.cores.desc()).first()
+
+    def _pick_gpu_for_budget(budget_tier, use_case):
+        query = GPU.query
+        if use_case in {"streaming", "editing"}:
+            query = query.filter(GPU.brand == "NVIDIA")
+        if budget_tier == "low":
+            query = query.filter(GPU.vram_gb <= 12, GPU.tdp_watts <= 220)
+        elif budget_tier == "high":
+            query = query.filter(GPU.vram_gb >= 16)
+        else:
+            query = query.filter(GPU.vram_gb >= 8)
+        return query.order_by(GPU.current_price_usd.asc().nullslast(), GPU.vram_gb.desc(), GPU.boost_clock_mhz.desc()).first()
+
+    def _pick_motherboard_for_cpu(cpu):
+        if not cpu:
+            return Motherboard.query.order_by(Motherboard.name).first()
+        return Motherboard.query.filter_by(socket_id=cpu.socket_id).order_by(Motherboard.current_price_usd.asc().nullslast(), Motherboard.memory_slots.desc()).first()
+
+    def _pick_ram_for_budget(budget_tier):
+        if budget_tier == "high":
+            return RamKit.query.filter(RamKit.capacity_gb >= 32).order_by(RamKit.speed_mhz.desc(), RamKit.capacity_gb.desc()).first()
+        if budget_tier == "low":
+            return RamKit.query.filter(RamKit.capacity_gb <= 16).order_by(RamKit.speed_mhz.desc()).first()
+        return RamKit.query.filter(RamKit.capacity_gb >= 16).order_by(RamKit.speed_mhz.desc(), RamKit.capacity_gb.desc()).first()
+
+    def _pick_ssd_for_budget(budget_tier):
+        if budget_tier == "high":
+            return SSD.query.filter(SSD.capacity_gb >= 2000).order_by(SSD.seq_read_mbps.desc()).first()
+        if budget_tier == "low":
+            return SSD.query.filter(SSD.capacity_gb <= 1000).order_by(SSD.seq_read_mbps.desc()).first()
+        return SSD.query.filter(SSD.capacity_gb >= 1000).order_by(SSD.seq_read_mbps.desc()).first()
+
+    def _pick_psu_for_gpu(gpu):
+        if not gpu:
+            return PSU.query.order_by(PSU.wattage.desc()).first()
+        return PSU.query.filter(PSU.wattage >= max(550, int(gpu.min_psu_watts or 550))).order_by(PSU.wattage.asc()).first()
+
+    def _pick_cooler_for_cpu(cpu):
+        if not cpu:
+            return CpuCooler.query.order_by(CpuCooler.tdp_rating_watts.desc()).first()
+        compatible = []
+        for cooler in CpuCooler.query.all():
+            if cooler.supports_socket(cpu.socket.name if cpu.socket else ""):
+                compatible.append(cooler)
+        if compatible:
+            return compatible[0]
+        return CpuCooler.query.order_by(CpuCooler.tdp_rating_watts.desc()).first()
+
+    def _pick_case_for_budget(budget_tier):
+        if budget_tier == "high":
+            return PCCase.query.order_by(PCCase.gpu_clearance_mm.desc(), PCCase.max_radiator_mm.desc()).first()
+        if budget_tier == "low":
+            return PCCase.query.order_by(PCCase.current_price_usd.asc().nullslast(), PCCase.gpu_clearance_mm.desc()).first()
+        return PCCase.query.order_by(PCCase.gpu_clearance_mm.desc()).first()
+
+    def _pick_case_fan_for_case(case):
+        if not case:
+            return CaseFan.query.order_by(CaseFan.max_airflow_cfm.desc()).first()
+        return CaseFan.query.order_by(CaseFan.max_airflow_cfm.desc()).first()
+
+    def generate_build_from_catalog(use_case, budget_tier):
+        use_case = (use_case or "gaming").lower()
+        budget_tier = (budget_tier or "mid").lower()
+
+        cpu = _pick_cpu_for_budget(budget_tier, use_case)
+        gpu = _pick_gpu_for_budget(budget_tier, use_case)
+        motherboard = _pick_motherboard_for_cpu(cpu)
+        ram = _pick_ram_for_budget(budget_tier)
+        ssd = _pick_ssd_for_budget(budget_tier)
+        psu = _pick_psu_for_gpu(gpu)
+        cooler = _pick_cooler_for_cpu(cpu)
+        case = _pick_case_for_budget(budget_tier)
+        fan = _pick_case_fan_for_case(case)
+
+        return {
+            "cpu": {"name": _component_name(cpu), "explanation": f"{cpu.cores} cores / {cpu.threads} threads with {cpu.base_clock_ghz} GHz base clock and {cpu.boost_clock_ghz or cpu.base_clock_ghz} GHz boost for {use_case} workloads." if cpu else "A balanced CPU picked from the catalog."},
+            "gpu": {"name": _component_name(gpu), "explanation": f"{gpu.vram_gb}GB VRAM and {gpu.tdp_watts}W TDP for solid {use_case} performance." if gpu else "A balanced GPU picked from the catalog."},
+            "ram": {"name": _component_name(ram), "explanation": f"{ram.capacity_gb}GB {ram.memory_type} memory at {ram.speed_mhz}MHz for smooth multitasking." if ram else "A balanced memory kit from the catalog."},
+            "motherboard": {"name": _component_name(motherboard), "explanation": f"{motherboard.form_factor} board with {motherboard.memory_slots} DIMM slots and {motherboard.m2_slots} M.2 slots." if motherboard else "A compatible motherboard from the catalog."},
+            "psu": {"name": _component_name(psu), "explanation": f"{psu.wattage}W {psu.efficiency_rating} power supply for reliable system delivery." if psu else "A rated power supply from the catalog."},
+            "storage": {"name": _component_name(ssd), "explanation": f"{ssd.capacity_gb}GB SSD with {ssd.interface} support for fast boot and load times." if ssd else "A fast storage drive from the catalog."},
+            "cooling": {"name": _component_name(cooler), "explanation": f"{cooler.cooler_type} cooling with {cooler.tdp_rating_watts}W support and socket coverage for your CPU." if cooler else "Cooling chosen from the catalog."},
+            "case": {"name": _component_name(case), "explanation": f"{case.form_factor} case with {case.gpu_clearance_mm}mm GPU clearance and {case.included_fans} included fans." if case else "A case selected from the catalog."},
+            "case_fan": {"name": _component_name(fan), "explanation": f"{fan.size_mm}mm fan picked to improve airflow in the selected chassis." if fan else "Additional airflow from the catalog."},
+        }
+
+    def _build_compatibility_report(payload):
+        cpu = CPU.query.get(payload.get("cpu_id")) if payload.get("cpu_id") else None
+        gpu = GPU.query.get(payload.get("gpu_id")) if payload.get("gpu_id") else None
+        motherboard = Motherboard.query.get(payload.get("motherboard_id")) if payload.get("motherboard_id") else None
+        ram = RamKit.query.get(payload.get("ram_id")) if payload.get("ram_id") else None
+        ssd = SSD.query.get(payload.get("ssd_id")) if payload.get("ssd_id") else None
+        psu = PSU.query.get(payload.get("psu_id")) if payload.get("psu_id") else None
+        cooler = CpuCooler.query.get(payload.get("cooler_id")) if payload.get("cooler_id") else None
+        case = PCCase.query.get(payload.get("case_id")) if payload.get("case_id") else None
+
+        issues = []
+        warnings = []
+
+        if cpu and motherboard and cpu.socket_id and motherboard.socket_id and cpu.socket_id != motherboard.socket_id:
+            issues.append("CPU socket does not match the motherboard socket.")
+        if cpu and motherboard and cpu.brand and motherboard.chipset and motherboard.chipset.cpu_brand and cpu.brand != motherboard.chipset.cpu_brand:
+            issues.append("The selected CPU brand does not match the motherboard chipset family.")
+        if ram and motherboard and ram.memory_type and motherboard.memory_type and ram.memory_type not in {motherboard.memory_type, "DDR4/DDR5"}:
+            issues.append("RAM type is incompatible with the motherboard memory standard.")
+        if ram and motherboard and motherboard.max_memory_speed_mhz and ram.speed_mhz and ram.speed_mhz > motherboard.max_memory_speed_mhz:
+            warnings.append("RAM speed exceeds the motherboard's rated maximum.")
+        if gpu and case and gpu.card_length_mm and case.gpu_clearance_mm and gpu.card_length_mm > case.gpu_clearance_mm:
+            issues.append("The GPU is too long for the selected case.")
+        if cooler and case and cooler.height_mm and case.cpu_cooler_clearance_mm and cooler.height_mm > case.cpu_cooler_clearance_mm:
+            issues.append("The CPU cooler is too tall for the selected case.")
+        if gpu and psu and gpu.min_psu_watts and psu.wattage and gpu.min_psu_watts > psu.wattage:
+            issues.append("The PSU is below the recommended wattage for the selected GPU.")
+        if gpu and psu and gpu.power_connectors:
+            if "16pin" in gpu.power_connectors and (not psu.has_12vhpwr and not psu.has_12v2x6):
+                issues.append("The PSU does not provide a 12VHPWR/12V-2x6 connector for the GPU.")
+            elif "8pin" in gpu.power_connectors and psu.pcie_8pin_count <= 0:
+                warnings.append("The PSU has no 8-pin PCIe connectors for the GPU.")
+        if motherboard and case and not case.supports_mobo_form_factor(motherboard.form_factor):
+            issues.append("The case does not support the motherboard form factor.")
+        if cpu and cooler and cpu.socket and not cooler.supports_socket(cpu.socket.name):
+            issues.append("The CPU cooler does not support the selected CPU socket.")
+        if motherboard and ssd and ssd.is_m2 and motherboard.m2_slots <= 0:
+            issues.append("The motherboard has no M.2 slots for the selected SSD.")
+        if motherboard and ssd and ssd.pcie_gen and motherboard.m2_pcie_gen_slots:
+            try:
+                supported = max(int(part.strip()) for part in motherboard.m2_pcie_gen_slots.split(",") if part.strip())
+                if ssd.pcie_gen > supported:
+                    warnings.append("The SSD requires a higher PCIe generation than the motherboard exposes on its M.2 slots.")
+            except ValueError:
+                pass
+
+        compatible = not issues
+        return {
+            "compatible": compatible,
+            "summary": "All selected components are compatible." if compatible else "The selected components have compatibility issues that should be addressed.",
+            "issues": issues,
+            "warnings": warnings,
+            "cpu": cpu.to_dict() if cpu else None,
+            "gpu": gpu.to_dict() if gpu else None,
+            "motherboard": motherboard.to_dict() if motherboard else None,
+            "ram": ram.to_dict() if ram else None,
+            "ssd": ssd.to_dict() if ssd else None,
+            "psu": psu.to_dict() if psu else None,
+            "cooler": cooler.to_dict() if cooler else None,
+            "case": case.to_dict() if case else None,
+        }
+
     def _looks_like_placeholder(value):
         normalized = (value or '').strip().lower()
         placeholder_markers = ('your_google', 'your-', 'your_', 'example', 'placeholder', 'changeme', 'onrender')
@@ -299,6 +805,68 @@ def create_app(test_config=None):
             return redirect(url_for('login'))
         return render_template('index.html', username=session['username'])
 
+    @app.route('/api/hardware/<category>')
+    def hardware_catalog(category):
+        category = category.lower()
+        catalog = _catalog_context()
+        if category == 'cpu':
+            items = catalog['cpus']
+        elif category == 'gpu':
+            items = catalog['gpus']
+        elif category == 'motherboard':
+            items = catalog['motherboards']
+        elif category == 'ram':
+            items = catalog['ram_kits']
+        elif category == 'ssd':
+            items = catalog['ssds']
+        elif category == 'psu':
+            items = catalog['psus']
+        elif category == 'cooler':
+            items = catalog['cpu_coolers']
+        elif category == 'case':
+            items = catalog['pc_cases']
+        elif category == 'fan':
+            items = catalog['case_fans']
+        else:
+            return jsonify({'error': 'Unsupported category'}), 400
+
+        return jsonify({'items': [{**item.to_dict(), 'image_path': resolve_component_image_path(item.image_path)} for item in items]})
+
+    @app.route('/api/components/search')
+    def search_components():
+        query = request.args.get('q', '').strip()
+        category = (request.args.get('category') or '').lower()
+        if not query:
+            return jsonify({'items': []})
+
+        if category == 'cpu':
+            items = CPU.query.filter(CPU.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'gpu':
+            items = GPU.query.filter(GPU.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'motherboard':
+            items = Motherboard.query.filter(Motherboard.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'ram':
+            items = RamKit.query.filter(RamKit.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'ssd':
+            items = SSD.query.filter(SSD.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'psu':
+            items = PSU.query.filter(PSU.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'cooler':
+            items = CpuCooler.query.filter(CpuCooler.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'case':
+            items = PCCase.query.filter(PCCase.name.ilike(f'%{query}%')).limit(10).all()
+        elif category == 'fan':
+            items = CaseFan.query.filter(CaseFan.name.ilike(f'%{query}%')).limit(10).all()
+        else:
+            items = []
+
+        return jsonify({'items': [item.to_dict() for item in items]})
+
+    @app.route('/api/compatibility/check', methods=['POST'])
+    def compatibility_check():
+        payload = request.get_json(silent=True) or {}
+        return jsonify(_build_compatibility_report(payload))
+
     @app.route('/logout')
     def logout():
         session.pop('username', None)
@@ -327,7 +895,25 @@ def create_app(test_config=None):
         if 'username' not in session:
             return redirect(url_for('login'))
 
-        return render_template('3d_builder.html', username=session['username'])
+        catalog = _catalog_context()
+        builder_catalog = {
+            "cpu": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["cpus"]],
+            "gpu": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["gpus"]],
+            "motherboard": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["motherboards"]],
+            "ram": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["ram_kits"]],
+            "ssd": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["ssds"]],
+            "psu": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["psus"]],
+            "cooler": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["cpu_coolers"]],
+            "case": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["pc_cases"]],
+            "fan": [{**item.to_dict(), "image_path": resolve_component_image_path(item.image_path)} for item in catalog["case_fans"]],
+        }
+        return render_template(
+            '3d_builder.html',
+            username=session['username'],
+            builder_catalog=builder_catalog,
+            placeholder_image=PLACEHOLDER_IMAGE_PATH,
+            **catalog,
+        )
 
     @app.route('/reverse-builder', methods=['GET', 'POST'])
     def reverse_builder():
@@ -337,16 +923,19 @@ def create_app(test_config=None):
         if request.method == 'POST':
             use_case = request.form['use_case']
             budget_tier = request.form['budget_tier']
-            build = generate_build(use_case, budget_tier)
+            build = generate_build_from_catalog(use_case, budget_tier)
             checklist = generate_boot_checklist(build)
-            return render_template('reverse_builder.html', username=session['username'], build=build, use_case=use_case, budget_tier=budget_tier, checklist=checklist)
+            return render_template('reverse_builder.html', username=session['username'], build=build, use_case=use_case, budget_tier=budget_tier, checklist=checklist, placeholder_image=PLACEHOLDER_IMAGE_PATH, **_catalog_context())
 
-        return render_template('reverse_builder.html', username=session['username'])
+        return render_template('reverse_builder.html', username=session['username'], placeholder_image=PLACEHOLDER_IMAGE_PATH, **_catalog_context())
 
     @app.route('/upgrade-planner', methods=['GET', 'POST'])
     def upgrade_planner():
         if 'username' not in session:
             return redirect(url_for('login'))
+
+        catalog = _catalog_context()
+        ram_capacities = sorted({kit.capacity_gb for kit in catalog['ram_kits'] if kit.capacity_gb})
 
         if request.method == 'POST':
             current_specs = {
@@ -358,9 +947,59 @@ def create_app(test_config=None):
                 'use_case': request.form['use_case']
             }
             upgrade_plan = generate_upgrade_plan(current_specs)
-            return render_template('upgrade_planner.html', username=session['username'], specs=current_specs, plan=upgrade_plan)
 
-        return render_template('upgrade_planner.html', username=session['username'])
+            current_cpu = _find_component(CPU, current_specs['cpu'])
+            current_gpu = _find_component(GPU, current_specs['gpu'])
+
+            cpu_upgrades = CPU.query
+            if current_cpu:
+                cpu_upgrades = cpu_upgrades.filter(CPU.socket_id == current_cpu.socket_id, CPU.id != current_cpu.id)
+            cpu_upgrades = cpu_upgrades.order_by(CPU.brand.asc(), CPU.name.asc()).all()
+
+            gpu_upgrades = GPU.query
+            if current_gpu:
+                gpu_upgrades = gpu_upgrades.filter(GPU.id != current_gpu.id)
+            gpu_upgrades = gpu_upgrades.order_by(GPU.brand.asc(), GPU.vram_gb.desc().nullslast(), GPU.name.asc()).all()
+
+            ram_upgrades = RamKit.query.filter(RamKit.capacity_gb >= current_specs['ram']).order_by(RamKit.capacity_gb.asc(), RamKit.speed_mhz.desc()).all()
+
+            if current_specs['storage'].lower() == 'nvme':
+                ssd_upgrades = SSD.query.filter(SSD.interface.ilike('%nvme%')).order_by(SSD.capacity_gb.desc()).all()
+            elif current_specs['storage'].lower() == 'ssd':
+                ssd_upgrades = SSD.query.filter(SSD.interface.ilike('%ssd%')).order_by(SSD.capacity_gb.desc()).all()
+            else:
+                ssd_upgrades = SSD.query.order_by(SSD.capacity_gb.desc()).all()
+
+            psu_upgrades = PSU.query.order_by(PSU.wattage.asc()).all()
+            if current_gpu and current_gpu.min_psu_watts:
+                psu_upgrades = [psu for psu in psu_upgrades if psu.wattage and psu.wattage >= current_gpu.min_psu_watts]
+
+            upgrade_options = {
+                'cpu': cpu_upgrades,
+                'gpu': gpu_upgrades,
+                'ram': ram_upgrades,
+                'ssd': ssd_upgrades,
+                'psu': psu_upgrades,
+            }
+
+            return render_template(
+                'upgrade_planner.html',
+                username=session['username'],
+                specs=current_specs,
+                plan=upgrade_plan,
+                upgrade_options=upgrade_options,
+                placeholder_image=PLACEHOLDER_IMAGE_PATH,
+                ram_capacities=ram_capacities,
+                **catalog,
+            )
+
+        return render_template(
+            'upgrade_planner.html',
+            username=session['username'],
+            placeholder_image=PLACEHOLDER_IMAGE_PATH,
+            ram_capacities=ram_capacities,
+            **catalog,
+        )
 
     @app.route('/toggle-beginner-mode', methods=['POST'])
     def toggle_beginner_mode():
@@ -377,6 +1016,9 @@ def create_app(test_config=None):
         if 'username' not in session:
             return redirect(url_for('login'))
 
+        catalog = _catalog_context()
+        ram_capacities = sorted({kit.capacity_gb for kit in catalog['ram_kits'] if kit.capacity_gb})
+
         if request.method == 'POST':
             specs = {
                 'cpu': request.form['cpu'],
@@ -386,9 +1028,23 @@ def create_app(test_config=None):
                 'settings': request.form['settings']
             }
             analysis = calculate_bottleneck(specs)
-            return render_template('bottleneck_predictor.html', username=session['username'], specs=specs, analysis=analysis)
+            return render_template(
+                'bottleneck_predictor.html',
+                username=session['username'],
+                specs=specs,
+                analysis=analysis,
+                placeholder_image=PLACEHOLDER_IMAGE_PATH,
+                ram_capacities=ram_capacities,
+                **catalog,
+            )
 
-        return render_template('bottleneck_predictor.html', username=session['username'])
+        return render_template(
+            'bottleneck_predictor.html',
+            username=session['username'],
+            placeholder_image=PLACEHOLDER_IMAGE_PATH,
+            ram_capacities=ram_capacities,
+            **catalog,
+        )
 
     @app.route('/voice-interaction', methods=['GET', 'POST'])
     def voice_interaction():
@@ -974,6 +1630,20 @@ def generate_upgrade_plan(specs):
 
 
 def calculate_bottleneck(specs):
+    def normalize_cpu_name(name):
+        normalized = (name or '').strip()
+        normalized = re.sub(r'^amd\s+ryzen\s+', 'Ryzen ', normalized, flags=re.I)
+        normalized = re.sub(r'^intel\s+core\s+', 'Intel ', normalized, flags=re.I)
+        normalized = re.sub(r'^intel\s+', 'Intel ', normalized, flags=re.I)
+        return normalized
+
+    def normalize_gpu_name(name):
+        normalized = (name or '').strip()
+        normalized = re.sub(r'^(nvidia\s+geforce\s+)', '', normalized, flags=re.I)
+        normalized = re.sub(r'^(nvidia\s+)', '', normalized, flags=re.I)
+        normalized = re.sub(r'^(amd\s+radeon\s+)', '', normalized, flags=re.I)
+        return normalized
+
     # Performance scores (approximate, based on benchmarks)
     cpu_scores = {
         'Ryzen 5 5600': 85, 'Ryzen 5 5600X': 88, 'Ryzen 7 5700X': 95,
@@ -1005,8 +1675,11 @@ def calculate_bottleneck(specs):
     resolution = specs['resolution']
     settings = specs['settings']
     
-    cpu_score = cpu_scores.get(cpu, 80)  # Default score if not found
-    gpu_score = gpu_scores.get(gpu, 75)  # Default score if not found
+    cpu_key = normalize_cpu_name(cpu)
+    gpu_key = normalize_gpu_name(gpu)
+
+    cpu_score = cpu_scores.get(cpu_key, 80)  # Default score if not found
+    gpu_score = gpu_scores.get(gpu_key, 75)  # Default score if not found
     
     # Adjust GPU score based on resolution and settings
     gpu_effective = gpu_score * resolution_multipliers.get(resolution, 1.0) * settings_multipliers.get(settings, 1.0)

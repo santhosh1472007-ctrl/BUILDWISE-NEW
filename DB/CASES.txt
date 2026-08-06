@@ -1,0 +1,253 @@
+🖥️ Corsair
+
+Corsair 3000D Airflow
+Corsair 3500X ARGB
+Corsair 4000D Airflow
+Corsair 5000D Airflow
+Corsair 6500X
+Corsair 7000D Airflow
+Corsair iCUE 5000X RGB
+Corsair iCUE 7000X RGB
+Corsair Frame 4000D
+
+🖥️ NZXT
+
+NZXT H5 Flow
+NZXT H5 Elite
+NZXT H6 Flow
+NZXT H7 Flow
+NZXT H7 Elite
+NZXT H9 Flow
+NZXT H9 Elite
+
+🖥️ Lian Li
+
+Lian Li LANCOOL 205
+Lian Li LANCOOL 216
+Lian Li LANCOOL III
+Lian Li O11 Dynamic EVO
+Lian Li O11 Vision
+Lian Li O11D EVO RGB
+Lian Li SUP01
+
+🖥️ Fractal Design
+
+Fractal Design Pop Air
+Fractal Design North
+Fractal Design North XL
+Fractal Design Meshify 2
+Fractal Design Torrent
+Fractal Design Define 7
+Fractal Design Terra
+
+🖥️ Phanteks
+
+Phanteks Eclipse G300A
+Phanteks Eclipse G360A
+Phanteks Eclipse G500A
+Phanteks NV5
+Phanteks NV7
+Phanteks Evolv X
+
+🖥️ Cooler Master
+
+Cooler Master MasterBox Q300L
+Cooler Master MasterBox TD500 Mesh
+Cooler Master MasterBox 520 Mesh
+Cooler Master HAF 500
+Cooler Master HAF 700 EVO
+Cooler Master NR200P
+
+🖥️ DeepCool
+
+DeepCool CH360
+DeepCool CH560
+DeepCool CH780
+DeepCool CK560
+DeepCool MATREXX 55
+
+🖥️ Montech
+
+Montech Air 100
+Montech Air 903 Base
+Montech Air 903 Max
+Montech Sky Two
+Montech King 95 Pro
+
+🖥️ HYTE
+
+HYTE Y40
+HYTE Y60
+HYTE Y70
+HYTE Revolt 3
+
+🖥️ ASUS
+
+ASUS TUF Gaming GT302
+ASUS TUF GT501
+ASUS Prime AP201
+ASUS ProArt PA602
+ROG Hyperion GR701
+
+🖥️ MSI
+
+MSI MAG Forge 120A
+MSI MAG Forge 320R
+MSI MPG GUNGNIR 300R
+MSI MPG VELOX 100R
+
+🖥️ be quiet!
+
+be quiet! Pure Base 500DX
+be quiet! Shadow Base 800
+be quiet! Shadow Base 800 FX
+be quiet! Dark Base Pro 901
+
+🖥️ Thermaltake
+
+Thermaltake View 270 TG
+Thermaltake CTE C750
+Thermaltake Tower 300
+Thermaltake Tower 600
+Thermaltake Tower 900
+
+🖥️ Antec
+
+Antec NX410
+Antec NX800
+Antec Performance 1 FT
+Antec C8
+🖥️ Gigabyte
+
+Gigabyte C102 Glass
+Gigabyte C301 Glass
+Gigabyte AORUS C500 Glass
+
+🖥️ SilverStone
+
+SilverStone FARA R1
+SilverStone SETA H2
+SilverStone Alta G1M
+SilverStone Alta F2
+
+🖥️ Sharkoon
+
+Sharkoon RGB Slider
+Sharkoon TG7M RGB
+Sharkoon Rebel C70G
+
+📦 Case Sizes
+
+Mini-ITX
+
+Micro-ATX
+
+ATX Mid Tower
+
+ATX Full Tower
+
+Super Tower
+
+📏 Motherboard Support
+
+Mini-ITX
+
+Micro-ATX
+
+ATX
+
+E-ATX
+
+SSI-EEB
+
+🌬️ Radiator Support
+
+120mm
+
+140mm
+
+240mm
+
+280mm
+
+360mm
+
+420mm
+
+💨 Fan Support
+
+120mm
+
+140mm
+
+200mm
+
+🎮 GPU Clearance
+
+Store as:
+
+300mm
+
+320mm
+
+340mm
+
+360mm
+
+400mm+
+
+🧊 CPU Cooler Clearance
+
+Store as:
+
+150mm
+
+160mm
+
+165mm
+
+170mm
+
+180mm
+
+🔋 PSU Support
+
+ATX
+
+SFX
+
+SFX-L
+
+🖥️ Side Panel
+
+Tempered Glass
+
+Mesh
+
+Steel
+
+Acrylic
+
+🎨 Colors
+
+Black
+
+White
+
+Grey
+
+Silver
+
+Pink
+
+Green
+
+Blue
+
+💡 RGB
+
+ARGB
+
+RGB
+
+No RGB

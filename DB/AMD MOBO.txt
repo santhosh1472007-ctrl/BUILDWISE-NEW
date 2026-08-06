@@ -1,0 +1,93 @@
+AM5 Socket (Ryzen 7000 / 8000 / 9000)
+
+X870E
+
+ASUS ROG Crosshair X870E Hero
+ASUS ROG Crosshair X870E Extreme
+MSI MEG X870E GODLIKE
+MSI MPG X870E Carbon WiFi
+Gigabyte X870E AORUS Master
+Gigabyte X870E AORUS Elite
+ASRock X870E Taichi
+ASRock X870E Steel Legend
+
+X870
+ASUS ROG Strix X870-A Gaming WiFi
+ASUS TUF Gaming X870-PLUS WiFi
+MSI MAG X870 Tomahawk WiFi
+Gigabyte X870 AORUS Elite WiFi7
+ASRock X870 Pro RS
+
+B850
+ASUS ROG Strix B850-A Gaming WiFi
+ASUS TUF Gaming B850-PLUS WiFi
+MSI MAG B850 Tomahawk
+Gigabyte B850 AORUS Elite
+ASRock B850 Steel Legend
+
+B840
+ASUS PRIME B840M-A
+MSI PRO B840M-A
+Gigabyte B840M DS3H
+ASRock B840M Pro RS
+
+X670E
+ASUS ROG Crosshair X670E Hero
+ASUS ROG Crosshair X670E Extreme
+MSI MEG X670E ACE
+MSI MPG X670E Carbon
+Gigabyte X670E AORUS Master
+ASRock X670E Taichi
+
+X670
+ASUS Prime X670-P
+ASUS TUF X670
+MSI PRO X670-P WiFi
+Gigabyte X670 AORUS Elite
+ASRock X670 Steel Legend
+
+B650E
+ASUS ROG Strix B650E-E
+ASUS ROG Strix B650E-F
+MSI MPG B650 Carbon WiFi
+Gigabyte B650E AORUS Master
+ASRock B650E Steel Legend
+
+B650
+MSI MAG B650 Tomahawk WiFi
+MSI PRO B650M-A
+ASUS TUF Gaming B650-PLUS
+ASUS Prime B650M-A
+Gigabyte B650 AORUS Elite AX
+Gigabyte B650 Gaming X
+ASRock B650M Pro RS
+ASRock B650 PG Lightning
+
+A620
+ASUS PRIME A620M-A
+MSI PRO A620M-E
+Gigabyte A620M Gaming X
+ASRock A620M-HDV
+AM4 Socket
+
+X570
+ASUS ROG Crosshair VIII Hero
+MSI MEG X570 ACE
+Gigabyte X570 AORUS Master
+ASRock X570 Taichi
+
+B550
+MSI MAG B550 Tomahawk
+MSI B550M PRO-VDH
+ASUS ROG Strix B550-F
+ASUS TUF Gaming B550-PLUS
+Gigabyte B550 AORUS Elite
+Gigabyte B550M DS3H
+ASRock B550 Steel Legend
+ASRock B550 Phantom Gaming
+
+A520
+ASUS Prime A520M-K
+MSI A520M-A PRO
+Gigabyte A520M DS3H
+ASRock A520M-HDV

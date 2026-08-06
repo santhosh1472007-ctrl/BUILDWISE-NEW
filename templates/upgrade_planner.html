@@ -2,22 +2,43 @@
 {% set page_class = "upgrade-planner-page" %}
 
 {% block content %}
-<section class="chat-card">
+<section class="tool-card">
   <div class="heading-group">
     <h1>Upgrade Path Planner</h1>
-    <p>Already have a PC? Get a 3-phase upgrade roadmap showing what to upgrade first for maximum performance gain per rupee over 12–24 months.</p>
+    <p>Already have a PC? Get a 3-phase upgrade roadmap showing what to upgrade first for maximum performance gain per
+      rupee over 12–24 months.</p>
   </div>
 
   <form method="POST" class="planner-form">
     <div class="form-row">
       <div class="form-group">
         <label for="cpu">Current CPU</label>
-        <input type="text" name="cpu" id="cpu" placeholder="e.g., Ryzen 5 5600X, i5-12400F" required>
+        <select name="cpu" id="cpu" required>
+          <option value="">Select CPU...</option>
+          {% for brand_group in cpus|groupby('brand') %}
+          <optgroup label="{{ brand_group.grouper or 'Other' }}">
+            {% for cpu in brand_group.list %}
+            <option value="{{ cpu.name }}" {% if specs and specs.cpu==cpu.name %}selected{% endif %}>{{ cpu.name }}
+            </option>
+            {% endfor %}
+          </optgroup>
+          {% endfor %}
+        </select>
       </div>
 
       <div class="form-group">
         <label for="gpu">Current GPU</label>
-        <input type="text" name="gpu" id="gpu" placeholder="e.g., RTX 3060, GTX 1660" required>
+        <select name="gpu" id="gpu" required>
+          <option value="">Select GPU...</option>
+          {% for brand_group in gpus|groupby('brand') %}
+          <optgroup label="{{ brand_group.grouper or 'Other' }}">
+            {% for gpu in brand_group.list %}
+            <option value="{{ gpu.name }}" {% if specs and specs.gpu==gpu.name %}selected{% endif %}>{{ gpu.name }}
+            </option>
+            {% endfor %}
+          </optgroup>
+          {% endfor %}
+        </select>
       </div>
     </div>
 
@@ -26,11 +47,10 @@
         <label for="ram">RAM Amount (GB)</label>
         <select name="ram" id="ram" required>
           <option value="">Select RAM...</option>
-          <option value="8">8GB</option>
-          <option value="16">16GB</option>
-          <option value="32">32GB</option>
-          <option value="64">64GB</option>
-          <option value="128">128GB+</option>
+          {% for capacity in ram_capacities %}
+          <option value="{{ capacity }}" {% if specs and specs.ram==capacity %}selected{% endif %}>{{ capacity }}GB
+          </option>
+          {% endfor %}
         </select>
       </div>
 
@@ -38,9 +58,9 @@
         <label for="storage">Storage Type</label>
         <select name="storage" id="storage" required>
           <option value="">Select storage...</option>
-          <option value="hdd">HDD Only</option>
-          <option value="ssd">SSD</option>
-          <option value="nvme">NVMe SSD</option>
+          <option value="hdd" {% if specs and specs.storage=='hdd' %}selected{% endif %}>HDD Only</option>
+          <option value="ssd" {% if specs and specs.storage=='ssd' %}selected{% endif %}>SSD</option>
+          <option value="nvme" {% if specs and specs.storage=='nvme' %}selected{% endif %}>NVMe SSD</option>
         </select>
       </div>
     </div>
@@ -50,9 +70,9 @@
         <label for="budget">Monthly Budget</label>
         <select name="budget" id="budget" required>
           <option value="">Select budget...</option>
-          <option value="low">₹5,000-10,000/month</option>
-          <option value="mid">₹10,000-20,000/month</option>
-          <option value="high">₹20,000+/month</option>
+          <option value="low" {% if specs and specs.budget=='low' %}selected{% endif %}>₹5,000-10,000/month</option>
+          <option value="mid" {% if specs and specs.budget=='mid' %}selected{% endif %}>₹10,000-20,000/month</option>
+          <option value="high" {% if specs and specs.budget=='high' %}selected{% endif %}>₹20,000+/month</option>
         </select>
       </div>
 
@@ -60,10 +80,11 @@
         <label for="use_case">Primary Use Case</label>
         <select name="use_case" id="use_case" required>
           <option value="">Select use case...</option>
-          <option value="gaming">Gaming</option>
-          <option value="editing">Video Editing / Content Creation</option>
-          <option value="streaming">Streaming</option>
-          <option value="general">General Use</option>
+          <option value="gaming" {% if specs and specs.use_case=='gaming' %}selected{% endif %}>Gaming</option>
+          <option value="editing" {% if specs and specs.use_case=='editing' %}selected{% endif %}>Video Editing /
+            Content Creation</option>
+          <option value="streaming" {% if specs and specs.use_case=='streaming' %}selected{% endif %}>Streaming</option>
+          <option value="general" {% if specs and specs.use_case=='general' %}selected{% endif %}>General Use</option>
         </select>
       </div>
     </div>
@@ -71,15 +92,40 @@
     <button type="submit" class="plan-button">Generate Upgrade Plan</button>
   </form>
 
+  <div class="search-panel">
+    <h2>Search Components</h2>
+    <div class="search-controls">
+      <label for="search-category">Component Type</label>
+      <select id="search-category">
+        <option value="all">All Categories</option>
+        <option value="cpu">CPU</option>
+        <option value="gpu">GPU</option>
+        <option value="motherboard">Motherboard</option>
+        <option value="ram">RAM</option>
+        <option value="ssd">SSD</option>
+        <option value="psu">PSU</option>
+        <option value="cooler">Cooler</option>
+        <option value="case">Case</option>
+        <option value="fan">Fan</option>
+      </select>
+
+      <label for="search-query">Search query</label>
+      <input type="text" id="search-query" placeholder="Search component name" />
+
+      <button type="button" id="search-button" class="build-button">Search Components</button>
+    </div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+
   {% if plan %}
   <div class="plan-results">
     <h2>Your 3-Phase Upgrade Roadmap</h2>
-    
+
     {% for phase_key, phase_data in plan.items() %}
     <div class="plan-phase">
       <h3>Phase {{ phase_key[-1] }}: {{ phase_data.timeline }}</h3>
       <p class="phase-focus"><strong>Focus:</strong> {{ phase_data.focus }}</p>
-      
+
       <div class="upgrades-list">
         {% for upgrade in phase_data.upgrades %}
         <div class="upgrade-card">
@@ -97,149 +143,191 @@
     {% endfor %}
   </div>
   {% endif %}
+
+  {% if upgrade_options %}
+  <div class="upgrade-options">
+    <h2>Compatible Upgrades from Database</h2>
+    {% for category, items in upgrade_options.items() %}
+    <div class="upgrade-category">
+      <h3>{{ category.upper() }}</h3>
+      {% if items %}
+      <ul class="upgrade-options-list">
+        {% for item in items %}
+        <li>
+          <strong>{{ item.name }}</strong>
+          {% if category == 'cpu' and item.cores %} — {{ item.cores }}C/{{ item.threads }}T{% endif %}
+          {% if category == 'gpu' and item.vram_gb %} — {{ item.vram_gb }}GB{% endif %}
+          {% if category == 'ram' and item.capacity_gb %} — {{ item.capacity_gb }}GB {{ item.memory_type }}{% endif %}
+          {% if category == 'ssd' and item.capacity_gb %} — {{ item.capacity_gb }}GB {{ item.interface }}{% endif %}
+          {% if category == 'psu' and item.wattage %} — {{ item.wattage }}W{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No compatible {{ category }} upgrades found in the database.</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 </section>
 
 <style>
-.planner-form {
-  margin-bottom: 2rem;
-}
-
-.form-row {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.form-row .form-group {
-  flex: 1;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  color: var(--text-primary);
-}
-
-.form-group input, .form-group select {
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid var(--border-primary);
-  border-radius: 8px;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
-  outline: none;
-}
-
-.form-group select option {
-  background: rgba(4, 8, 22, 0.98);
-  color: var(--text-primary);
-}
-
-.form-group select option:hover {
-  background: rgba(94, 231, 255, 0.12);
-}
-
-.plan-button {
-  background: var(--accent-primary);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.plan-button:hover {
-  background: var(--accent-secondary);
-}
-
-.plan-results {
-  margin-top: 3rem;
-}
-
-.plan-results h2 {
-  color: var(--accent-primary);
-  margin-bottom: 2rem;
-}
-
-.plan-phase {
-  margin-bottom: 3rem;
-  padding: 2rem;
-  background: rgba(11, 18, 40, 0.76);
-  border-radius: 12px;
-  border: 2px solid var(--border-primary);
-  box-shadow: var(--shadow-md);
-}
-
-.plan-phase h3 {
-  color: var(--accent-primary);
-  margin-bottom: 0.5rem;
-}
-
-.phase-focus {
-  color: var(--text-secondary);
-  margin-bottom: 1.5rem;
-}
-
-.upgrades-list {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.upgrade-card {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 1px solid var(--border-primary);
-  transition: box-shadow 0.3s;
-}
-
-.upgrade-card:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.upgrade-card h4 {
-  color: var(--accent-primary);
-  margin-bottom: 0.5rem;
-}
-
-.recommendation {
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-.reason {
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 1rem;
-}
-
-.upgrade-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-}
-
-.cost {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.gain {
-  color: #007bff;
-  font-weight: bold;
-}
-
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-    gap: 1rem;
+  .planner-form {
+    margin-bottom: 2rem;
   }
-}
+
+  .form-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-row .form-group {
+    flex: 1;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--text-primary);
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-primary);
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    outline: none;
+  }
+
+  .form-group select option {
+    background: rgba(4, 8, 22, 0.98);
+    color: var(--text-primary);
+  }
+
+  .form-group select option:hover {
+    background: rgba(94, 231, 255, 0.12);
+  }
+
+  .plan-button {
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .plan-button:hover {
+    background: var(--accent-secondary);
+  }
+
+  .plan-results {
+    margin-top: 3rem;
+  }
+
+  .plan-results h2 {
+    color: var(--accent-primary);
+    margin-bottom: 2rem;
+  }
+
+  .plan-phase {
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(11, 18, 40, 0.76);
+    border-radius: 12px;
+    border: 2px solid var(--border-primary);
+    box-shadow: var(--shadow-md);
+  }
+
+  .plan-phase h3 {
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .phase-focus {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  .upgrades-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .upgrade-card {
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-primary);
+    transition: box-shadow 0.3s;
+  }
+
+  .upgrade-card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .upgrade-card h4 {
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .recommendation {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+
+  .reason {
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .upgrade-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+  }
+
+  .cost {
+    color: #28a745;
+    font-weight: bold;
+  }
+
+  .gain {
+    color: #007bff;
+    font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
 </style>
+<script src="{{ url_for('static', filename='js/builder.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    BuildWiseBuilder.initSearchPanel({
+      categorySelectId: 'search-category',
+      queryInputId: 'search-query',
+      searchButtonId: 'search-button',
+      resultsContainerId: 'search-results',
+      categories: ['cpu', 'gpu', 'motherboard', 'ram', 'ssd', 'psu', 'cooler', 'case', 'fan'],
+      searchEndpoint: '/api/components/search',
+      placeholderImage: '{{ placeholder_image }}'
+    });
+  });
+</script>
 {% endblock %}

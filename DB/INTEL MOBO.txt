@@ -1,0 +1,80 @@
+Intel Motherboards
+
+LGA1851
+
+Z890
+ASUS ROG Maximus Z890 Hero
+ASUS ROG Strix Z890-E
+MSI MEG Z890 ACE
+MSI MPG Z890 Carbon
+Gigabyte Z890 AORUS Master
+ASRock Z890 Taichi
+
+B860
+ASUS TUF Gaming B860-PLUS
+MSI MAG B860 Tomahawk
+Gigabyte B860 AORUS Elite
+ASRock B860 Steel Legend
+
+H810
+ASUS PRIME H810M
+MSI PRO H810M
+Gigabyte H810M DS3H
+ASRock H810M Pro RS
+LGA1700
+
+Z790
+ASUS ROG Maximus Z790 Hero
+ASUS ROG Strix Z790-E Gaming
+MSI MPG Z790 Carbon WiFi
+MSI MAG Z790 Tomahawk
+Gigabyte Z790 AORUS Master
+Gigabyte Z790 Gaming X
+ASRock Z790 Taichi
+ASRock Z790 Steel Legend
+
+B760
+ASUS TUF Gaming B760-PLUS
+ASUS Prime B760M-A
+MSI MAG B760 Tomahawk
+MSI PRO B760M-A
+Gigabyte B760 AORUS Elite
+Gigabyte B760M DS3H
+ASRock B760 Pro RS
+ASRock B760 Steel Legend
+
+H770
+ASUS Prime H770
+MSI PRO H770
+Gigabyte H770 Gaming X
+ASRock H770 Steel Legend
+
+H610
+ASUS Prime H610M-K
+MSI PRO H610M-G
+Gigabyte H610M S2H
+ASRock H610M-HDV
+
+Z690
+ASUS ROG Maximus Z690 Hero
+MSI MEG Z690 ACE
+Gigabyte Z690 AORUS Master
+ASRock Z690 Taichi
+
+B660
+ASUS Prime B660M-A
+MSI MAG B660 Tomahawk
+Gigabyte B660 Gaming X
+ASRock B660 Steel Legend
+
+H670
+ASUS Prime H670
+MSI PRO H670
+Gigabyte H670 Gaming X
+ASRock H670 Steel Legend
+
+H610
+ASUS Prime H610M-K
+MSI PRO H610M-G
+Gigabyte H610M S2H
+ASRock H610M-HDV

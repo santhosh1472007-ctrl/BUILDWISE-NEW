@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbyte - AI PC Builder</title>
+    <title>BuildWise - PC Builder Tools</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -11,7 +11,7 @@
     <header class="site-header">
         <div class="header-container">
             <div class="brand">
-                <a href="{{ url_for('home') }}">Chatbyte</a>
+                <a href="{{ url_for('home') }}">BuildWise</a>
             </div>
 
             <nav class="site-nav">
@@ -19,7 +19,7 @@
                     {% if 'username' in session %}
                         <li><a href="{{ url_for('home') }}">Dashboard</a></li>
                         <li><a href="{{ url_for('pcbuilder') }}">PC Builder</a></li>
-                        <li><a href="{{ url_for('voice_interaction') }}">Voice Chat</a></li>
+                        <li><a href="{{ url_for('voice_interaction') }}">Voice Tools</a></li>
                         <li><a href="{{ url_for('reverse_builder') }}">Use Case Planner</a></li>
                         <li><a href="{{ url_for('bottleneck_predictor') }}">Bottleneck Predictor</a></li>
                         <li><a href="{{ url_for('upgrade_planner') }}">Upgrade Planner</a></li>
@@ -49,7 +49,7 @@
             <div class="module-card">
                 <div class="module-title">
                     <span class="status-indicator online"></span>
-                    AI Assistant
+                    BuildWise Tools
                 </div>
                 <div class="module-status">Online</div>
                 <div class="module-description">Intelligent PC building guidance powered by advanced AI</div>
@@ -95,7 +95,7 @@
                 <div class="module-description">Automated order pipeline with verification</div>
             </div>
         </div>
-        <p>� 2026 Chatbyte. Advanced AI PC Building Platform.</p>
+        <p>© 2026 BuildWise. Advanced PC Building Platform.</p>
     </footer>
     {% endif %}
 </body>

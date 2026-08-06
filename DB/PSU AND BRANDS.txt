@@ -1,0 +1,213 @@
+🔋 PSU Brands
+
+Corsair
+
+Corsair CV450
+Corsair CV550
+Corsair CV650
+Corsair CV750
+
+Corsair CX450
+Corsair CX550
+Corsair CX650
+Corsair CX750
+
+Corsair RM550e
+Corsair RM650e
+Corsair RM750e
+Corsair RM850e
+Corsair RM1000e
+
+Corsair RM650x
+Corsair RM750x
+Corsair RM850x
+Corsair RM1000x
+
+Corsair HX750
+Corsair HX850
+Corsair HX1000
+Corsair HX1200
+
+Corsair AX1000
+Corsair AX1600i
+
+Cooler Master
+
+Cooler Master MWE 450 Bronze V2
+Cooler Master MWE 550 Bronze V2
+Cooler Master MWE 650 Bronze V2
+Cooler Master MWE 750 Bronze V2
+Cooler Master MWE Gold 850 V2
+Cooler Master GX III Gold 1000
+Cooler Master V850 Gold V2
+Cooler Master V1000 Platinum
+
+MSI
+
+MSI MAG A550BN
+MSI MAG A650BN
+MSI MAG A750BN
+MSI MAG A850GL
+MSI MPG A850G
+MSI MPG A1000G
+MSI MEG Ai1300P
+
+ASUS
+
+ASUS TUF Gaming 550W Bronze
+ASUS TUF Gaming 650W Bronze
+ASUS TUF Gaming 750W Gold
+ASUS TUF Gaming 850W Gold
+
+ASUS ROG Strix 750G
+ASUS ROG Strix 850G
+ASUS ROG Thor 1000P2
+ASUS ROG Thor 1200P2
+Seasonic
+
+Seasonic S12III 550
+Seasonic B12 BC-650
+Seasonic Focus GX-650
+Seasonic Focus GX-750
+Seasonic Focus GX-850
+Seasonic Vertex GX-1000
+Seasonic Prime TX-1000
+Seasonic Prime TX-1300
+
+EVGA
+
+EVGA 500 BR
+EVGA 600 BR
+EVGA 650 BQ
+EVGA SuperNOVA 650 G5
+EVGA SuperNOVA 750 G6
+EVGA SuperNOVA 850 G7
+EVGA SuperNOVA 1000 G6
+
+Thermaltake
+
+Thermaltake Smart 500W
+Thermaltake Smart BX1 650W
+Thermaltake Toughpower GF1 750W
+Thermaltake Toughpower GF3 850W
+Thermaltake Toughpower GF3 1000W
+Thermaltake Toughpower PF3 1200W
+
+Gigabyte
+
+Gigabyte P550B
+Gigabyte P650B
+Gigabyte UD750GM
+Gigabyte UD850GM
+Gigabyte UD1000GM
+Gigabyte AORUS P850W
+Gigabyte AORUS P1200W
+
+DeepCool
+
+DeepCool PK550D
+DeepCool PK650D
+DeepCool PM750D
+DeepCool PM850D
+DeepCool PX1000G
+
+NZXT
+
+NZXT C650 Bronze
+NZXT C750 Gold
+NZXT C850 Gold
+NZXT C1000 Gold
+NZXT C1200 Gold
+be quiet!
+be quiet! System Power 10 550W
+be quiet! Pure Power 12 M 650W
+be quiet! Pure Power 12 M 850W
+be quiet! Straight Power 12 1000W
+be quiet! Dark Power 13 1300W
+
+SilverStone
+
+SilverStone ET550
+SilverStone DA650 Gold
+SilverStone HELA 850R
+SilverStone HELA 1200R
+
+Antec
+
+Antec CSK550
+Antec NeoEco Gold 650W
+Antec HCG750 Gold
+Antec HCG850 Gold
+Antec Signature Platinum 1300W
+
+FSP
+
+FSP HV Pro 550
+FSP Hydro G Pro 650
+FSP Hydro G Pro 850
+FSP Hydro PTM Pro 1200
+
+🔋 Wattages
+
+450W
+
+500W
+
+550W
+
+600W
+
+650W
+
+700W
+
+750W
+
+850W
+
+1000W
+
+1200W
+
+1300W
+
+1600W
+
+⭐ Efficiency Ratings
+
+80+ White
+
+80+ Bronze
+
+80+ Silver
+
+80+ Gold
+
+80+ Platinum
+
+80+ Titanium
+
+🔌 Modular Types
+Non-Modular
+
+Semi-Modular
+
+Fully Modular
+📏 Form Factors
+ATX
+
+SFX
+
+SFX-L
+
+TFX
+🔗 PCIe Power Connectors
+6-pin
+
+6+2-pin
+
+8-pin
+
+12VHPWR (16-pin)
+
+12V-2x6

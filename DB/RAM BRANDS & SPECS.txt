@@ -1,0 +1,176 @@
+RAM Brands
+
+Corsair
+Vengeance LPX
+
+Vengeance RGB Pro
+
+Vengeance RGB DDR5
+
+Dominator Platinum RGB
+
+Dominator Titanium
+
+G.Skill
+Ripjaws V
+
+Ripjaws S5
+
+Trident Z RGB
+
+Trident Z5 RGB
+
+Trident Z5 Neo
+
+Flare X5
+
+Kingston
+FURY Beast DDR4
+
+FURY Beast DDR5
+
+FURY Renegade
+
+FURY Renegade RGB
+
+ValueRAM
+Crucial
+Crucial Pro DDR4
+
+Crucial Pro DDR5
+
+Ballistix
+
+Pro OC
+
+TeamGroup
+T-Force Delta RGB
+
+T-Force Vulcan
+
+T-Force Xtreem
+
+Elite DDR5
+
+ADATA
+XPG Lancer
+
+XPG Caster
+
+XPG Spectrix D50
+
+Patriot
+Viper Steel
+
+Viper Venom
+
+Viper Elite
+
+Silicon Power
+XPOWER Zenith
+
+Gaming DDR5
+
+Lexar
+ARES RGB DDR5
+
+THOR DDR4
+
+GeIL
+EVO Spear
+
+Orion RGB
+
+Polaris RGB
+
+PNY
+XLR8 Gaming
+
+Performance DDR5
+
+DDR4 Kits
+
+Common speeds
+
+2400
+
+2666
+
+2933
+
+3000
+
+3200
+
+3600
+
+4000
+
+4266
+
+DDR5 Kits
+
+4800
+
+5200
+
+5600
+
+6000
+
+6200
+
+6400
+
+6600
+
+6800
+
+7200
+
+7600
+
+8000
+
+Capacities
+
+8GB
+
+16GB
+
+24GB
+
+32GB
+
+48GB
+
+64GB
+
+96GB
+
+128GB
+
+192GB
+
+256GB
+
+RGB
+Yes
+
+No
+
+Module Count
+
+1x8
+
+2x8
+
+2x16
+
+2x24
+
+2x32
+
+4x16
+
+4x32

@@ -1,35 +1,175 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Santhosh V is a Full Stack Python and Flask developer building modern web apps, admin dashboards, APIs, and AI-powered solutions.">
+    <meta name="description"
+        content="Santhosh V is a Full Stack Python and Flask developer building modern web apps, admin dashboards, APIs, and AI-powered solutions.">
     <title>Santhosh V | Full Stack Python & Flask Developer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        .site-header { position: sticky; top: 0; z-index: 100; padding: 0.95rem 0; background: rgba(4, 8, 22, 0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-bottom: 1px solid rgba(255,255,255,0.08); transition: background 0.25s ease, box-shadow 0.25s ease; }
-        .site-header.is-scrolled { background: rgba(4, 8, 22, 0.82); box-shadow: 0 12px 30px rgba(2, 6, 23, 0.22); }
-        .header-container { display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 1.25rem; }
-        .brand { display: inline-flex; align-items: center; gap: 0.7rem; color: var(--text-primary); text-decoration: none; font-weight: 700; letter-spacing: -0.01em; }
-        .brand-mark { display: inline-grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 999px; background: var(--gradient-primary); color: #fff; font-size: 0.95rem; }
-        .brand-text { color: var(--text-primary); font-family: 'Poppins', sans-serif; }
-        .site-nav ul { display: flex; align-items: center; gap: 0.6rem; list-style: none; margin: 0; padding: 0; }
-        .site-nav a { color: var(--text-secondary); text-decoration: none; padding: 0.6rem 0.8rem; border-radius: 999px; font-weight: 500; transition: background 0.2s ease, color 0.2s ease; }
-        .site-nav a:hover, .site-nav a:focus-visible { color: var(--accent-primary); background: rgba(255,255,255,0.06); outline: none; }
-        .nav-toggle { display: none; flex-direction: column; gap: 0.24rem; border: 0; background: transparent; padding: 0.25rem; cursor: pointer; }
-        .nav-toggle span { width: 1.4rem; height: 2px; background: var(--text-primary); border-radius: 999px; }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-        .page-shell { padding-bottom: 2rem; }
-        .site-footer { text-align: center; padding: 1.5rem 1rem 2.2rem; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.08); background: rgba(4, 8, 22, 0.35); }
-        .site-footer p { margin: 0.2rem 0; }
+        :root {
+            --header-height: 68px;
+        }
+
+        .site-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            z-index: 1200;
+            padding: 0.6rem 0;
+            background: rgba(4, 8, 22, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            transition: background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .site-header.is-scrolled {
+            background: rgba(4, 8, 22, 0.96);
+            box-shadow: 0 12px 30px rgba(2, 6, 23, 0.28);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.25rem;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-mark {
+            display: inline-grid;
+            place-items: center;
+            width: 2.2rem;
+            height: 2.2rem;
+            border-radius: 999px;
+            background: var(--gradient-primary);
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .brand-text {
+            color: var(--text-primary);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .site-nav ul {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .site-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.45rem 0.7rem;
+            border-radius: 999px;
+            font-weight: 500;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .site-nav a:hover,
+        .site-nav a:focus-visible {
+            color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.06);
+            outline: none;
+        }
+
+        .nav-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 0.24rem;
+            border: 0;
+            background: transparent;
+            padding: 0.25rem;
+            cursor: pointer;
+        }
+
+        .nav-toggle span {
+            width: 1.4rem;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 999px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Reserve space for fixed header so page content is not hidden underneath */
+        .page-shell {
+            padding-top: calc(var(--header-height) + 8px);
+            padding-bottom: 2rem;
+        }
+
+        .site-footer {
+            text-align: center;
+            padding: 1.5rem 1rem 2.2rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(4, 8, 22, 0.35);
+        }
+
+        .site-footer p {
+            margin: 0.2rem 0;
+        }
+
         @media (max-width: 768px) {
-            .nav-toggle { display: inline-flex; }
-            .site-nav ul { position: absolute; top: calc(100% + 0.6rem); right: 1rem; flex-direction: column; align-items: flex-start; padding: 0.8rem; border: 1px solid rgba(255,255,255,0.12); border-radius: 1rem; background: rgba(4, 8, 22, 0.96); box-shadow: var(--shadow-md); min-width: 180px; display: none; }
-            .site-nav ul.is-open { display: flex; }
+            .nav-toggle {
+                display: inline-flex;
+            }
+
+            .site-nav ul {
+                position: absolute;
+                top: calc(100% + 0.6rem);
+                right: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 0.8rem;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 1rem;
+                background: rgba(4, 8, 22, 0.96);
+                box-shadow: var(--shadow-md);
+                min-width: 180px;
+                display: none;
+            }
+
+            .site-nav ul.is-open {
+                display: flex;
+            }
         }
     </style>
 </head>
+
 <body class="{{ page_class | default('portfolio-page') }}">
     <header class="site-header">
         <div class="header-container">
@@ -45,13 +185,14 @@
             </button>
             <nav class="site-nav" aria-label="Primary">
                 <ul id="site-nav-links">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="https://github.com/santhosh1472007-ctrl" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                    <li><a href="{{ url_for('home') }}#about">About</a></li>
+                    <li><a href="{{ url_for('home') }}#services">Services</a></li>
+                    <li><a href="{{ url_for('home') }}#projects">Projects</a></li>
+                    <li><a href="{{ url_for('home') }}#skills">Skills</a></li>
+                    <li><a href="{{ url_for('home') }}#contact">Contact</a></li>
+                    <li><a href="https://github.com/santhosh1472007-ctrl" target="_blank"
+                            rel="noopener noreferrer">GitHub</a></li>
                 </ul>
             </nav>
         </div>
@@ -90,20 +231,28 @@
                     links.classList.toggle('is-open', !isExpanded);
                 });
             }
-            document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+            document.querySelectorAll('a[href*="#"]').forEach(function (link) {
                 link.addEventListener('click', function (event) {
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (!target) { return; }
-                    event.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    if (document.body.classList.contains('nav-open')) {
-                        document.body.classList.remove('nav-open');
-                        links.classList.remove('is-open');
-                        toggle.setAttribute('aria-expanded', 'false');
+                    try {
+                        const url = new URL(this.href, location.href);
+                        const hash = url.hash;
+                        if (!hash) { return; }
+                        const target = document.querySelector(hash);
+                        if (!target) { return; }
+                        event.preventDefault();
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        if (document.body.classList.contains('nav-open')) {
+                            document.body.classList.remove('nav-open');
+                            links.classList.remove('is-open');
+                            toggle.setAttribute('aria-expanded', 'false');
+                        }
+                    } catch (err) {
+                        // If URL parsing fails, allow default navigation
                     }
                 });
             });
         });
     </script>
 </body>
+
 </html>

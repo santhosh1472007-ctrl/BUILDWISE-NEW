@@ -65,18 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Auto-scroll to latest message in chat
-  const messages = document.getElementById('messages');
-  if (messages) {
-    messages.scrollTop = messages.scrollHeight;
-    
-    // Observe new messages for auto-scroll
-    const observer = new MutationObserver(() => {
-      messages.scrollTop = messages.scrollHeight;
-    });
-    observer.observe(messages, { childList: true });
-  }
-
   // Keyboard navigation improvements
   document.addEventListener('keydown', function(e) {
     // Close modals with Escape
@@ -128,15 +116,6 @@ document.addEventListener('DOMContentLoaded', function() {
   if (savedTheme === 'dark') {
     document.body.classList.add('dark-theme');
   }
-
-  // Voice interaction enhancements
-  const voiceButtons = document.querySelectorAll('[data-voice]');
-  voiceButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      this.classList.add('listening');
-      setTimeout(() => this.classList.remove('listening'), 3000);
-    });
-  });
 
   // Form validation feedback
   const inputs = document.querySelectorAll('input, textarea, select');

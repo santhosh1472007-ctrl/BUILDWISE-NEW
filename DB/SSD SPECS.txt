@@ -1,0 +1,236 @@
+SSD Brands
+
+Samsung
+
+Samsung 870 EVO
+Samsung 870 QVO
+
+Samsung 970 EVO Plus
+Samsung 970 PRO
+
+Samsung 980
+Samsung 980 PRO
+
+Samsung 990 PRO
+Samsung 990 EVO
+Samsung 9100 PRO
+
+Western Digital (WD)
+
+WD Green SATA
+
+WD Blue SATA
+
+WD Blue SN570
+WD Blue SN580
+
+WD Black SN750
+WD Black SN770
+WD Black SN850
+WD Black SN850X
+WD Black SN8100
+
+Crucial
+
+Crucial BX500
+
+Crucial MX500
+
+Crucial P2
+Crucial P3
+Crucial P3 Plus
+
+Crucial P5
+Crucial P5 Plus
+
+Crucial T500
+
+Kingston
+
+Kingston A400
+
+Kingston KC2500
+
+Kingston NV1
+
+Kingston NV2
+
+Kingston KC3000
+
+Kingston Fury Renegade
+
+Corsair
+
+Corsair MP400
+
+Corsair MP510
+
+Corsair MP600 CORE
+
+Corsair MP600 PRO
+
+Corsair MP700
+
+Corsair MP700 PRO
+
+Seagate
+
+Seagate BarraCuda SATA
+
+Seagate FireCuda 510
+
+Seagate FireCuda 520
+
+Seagate FireCuda 530
+
+Seagate FireCuda 540
+
+ADATA / XPG
+
+ADATA SU650
+
+ADATA SU800
+
+ADATA Legend 710
+
+ADATA Legend 800
+
+ADATA Legend 850
+
+ADATA Legend 960
+
+ADATA XPG Gammix S70
+
+ADATA XPG S70 Blade
+
+TeamGroup
+
+TeamGroup GX2
+
+TeamGroup MP33
+
+TeamGroup MP34
+
+TeamGroup MP44
+
+TeamGroup T-Force Cardea A440
+
+TeamGroup Cardea Z540
+
+Lexar
+
+Lexar NM620
+
+Lexar NM710
+
+Lexar NM790
+
+Lexar Professional NM800 Pro
+
+Patriot
+
+Patriot P210
+
+Patriot P300
+
+Patriot VP4300
+
+Patriot VP4300 Lite
+
+PNY
+
+PNY CS900
+
+PNY CS1030
+
+PNY XLR8 CS3040
+
+PNY CS3140
+
+Silicon Power
+
+Silicon Power A55
+
+Silicon Power A60
+
+Silicon Power XD80
+
+Silicon Power XS70
+
+Sabrent
+
+Sabrent Rocket Q
+
+Sabrent Rocket 4
+
+Sabrent Rocket 4 Plus
+
+Sabrent Rocket 5
+
+Intel
+
+Intel 660p
+
+Intel 665p
+
+Intel Optane 900P
+
+Intel Optane 905P
+
+SSD Interfaces
+
+SATA III
+
+PCIe Gen3 x4
+
+PCIe Gen4 x4
+
+PCIe Gen5 x4
+
+SSD Form Factors
+
+2.5"
+
+M.2 2230
+
+M.2 2242
+
+M.2 2260
+
+M.2 2280
+
+M.2 22110
+
+Capacities
+
+120GB
+
+240GB
+
+250GB
+
+480GB
+
+500GB
+
+512GB
+
+960GB
+
+1TB
+
+2TB
+
+4TB
+
+8TB
+
+NAND Types
+
+SLC
+
+MLC
+
+TLC
+
+QLC
